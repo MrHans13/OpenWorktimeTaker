@@ -1,7 +1,8 @@
 import tkinter as tk
+
+
 class Buttons:
-    def __init__(self, win, t, fo, b, f, r, c):
-        self.win = win
+    def __init__(self, t, fo, b, f, r, c):
         self.b_text = t
         self.b_font = fo
         self.b_bg = b
@@ -9,16 +10,21 @@ class Buttons:
         self.b_row = r
         self.b_column = c
 
-    def return_Button(win, fo, b, f, p, tar):
-        tk.Button(win, text='zurück', font=fo,
-                  bg=b, fg=f, width=15,
-                  command=lambda: p.show_frame(tar)).grid(row=10, column=4)
-
-    def site_Button(win, t, fo, b, f, p, tar, r, c):
-        tk.Button(win, text=t, font=fo,
-                  bg=b, fg=f, width=15,
-                  command=lambda: p.show_frame(tar)).grid(row=r, column=c)
-
-    def com_button(win, t, fo, b, f, com, r , c):
-        tk.Button(win, text=t, font=fo,
+    def com_button(self, t, fo, b, f, com, r, c):
+        tk.Button(self, text=t, font=fo,
                   bg=b, fg=f, command=com).grid(row=r, column=c)
+
+    def com_button_interact(self, t, fo, b, f, com, r, c):
+        tk.Button(self, textvariable=t, font=fo,
+                  bg=b, fg=f,
+                  width=10, command=com).grid(row=r, column=c)
+
+    def com_button_left_interact(self, t, fo, b, f, com, r, c):
+        tk.Button(self, textvariable=t, font=fo,
+                  bg=b, fg=f,
+                  width=10, command=com).grid(row=r, column=c, sticky='w')
+
+    def time_button(self, t, fo, b, f, com):
+        tk.Button(self, textvariable=t, font=fo,
+                  bg=b, fg=f,
+                  width=10, height=2, command=com).grid(row=7, column=4)

@@ -22,17 +22,20 @@ def tick():
 
 def changeStat():
     global but_state_count
+    global time_but_col
     if but_state_count % 2 == 0:
         but_state.set('Stop')
-        time_button.config(bg='red', fg='black')
+        time_but_col = 'red'
+        buf.Buttons.time_button(fdRap, but_state, font_name, time_but_col, dark_grey, changeStat)
         mef.set_Time()
-        textfeld.insert(INSERT, '\t' + mef.set_Hour() + ':' + mef.set_Min())
+        textfeldday.insert(INSERT, '\t' + mef.set_Hour() + ':' + mef.set_Min())
     else:
         but_state.set('Start')
-        time_button.config(bg='green', fg='white')
-        textfeld.insert(INSERT, ' - ' + mef.set_Hour() + ':' + mef.set_Min() + '\t')
+        time_but_col = 'green'
+        buf.Buttons.time_button(fdRap, but_state, font_name, time_but_col, dark_grey, changeStat)
+        textfeldday.insert(INSERT, ' - ' + mef.set_Hour() + ':' + mef.set_Min() + '\t')
         #        result = woc.worktime_calc()
-        textfeld.insert(INSERT, '\t' + woc.worktime_calc() + '\n')
+        textfeldday.insert(INSERT, '\t' + woc.worktime_calc() + '\n')
         mef.set_Time()
     but_state_count += 1
 
@@ -40,47 +43,49 @@ def changeStat():
 def changeBackground():
     global bgstate
     global dark_grey
-
     if bgstate % 2 == 0:
         main_window.config(bg=light_grey)
+        raF.Raster.rasterTop(fdRap, light_grey)
+        raF.Raster.rasterSide(fdRap, light_grey)
         labelUhr.config(bg=light_grey, fg=dark_grey)
-        labelUhr.grid(row=1, column=3, padx=10)
         men.menutaskbar(main_window, light_grey, dark_grey)
-        for counter_one in range(8):
-            laf.label_View(main_window, "", font_titel, light_grey, dark_grey, 0, counter_one)
-        for counter_two in range(4):
-            laf.Labels.label_Small(main_window, label_list[counter_two], font_name, light_grey, dark_grey,
-                                   counter_two + 1, 0)
-        laf.Labels.label_Pics(main_window, logo, light_grey, 0, 1)
-
-        laf.Labels.label_Interact(main_window, name, font_name, light_grey, dark_grey, 2, 1)
-        laf.Labels.label_Interact(main_window, prename, font_name, light_grey, dark_grey, 3, 1)
-        laf.label_h_Left(main_window, "Aktueller Tag:", font_name, light_grey, dark_grey, 4, 1)
-        buf.Buttons.com_button(main_window, 'Light/Dark', font_name, light_grey, dark_grey, changeBackground, 15, 0)
-
+        stylenotebook.configure("BW.TLabel", background=light_grey)
+        fdRap.configure(bg=light_grey)
+        fwRap.configure(bg=light_grey)
+        fComm.configure(bg=light_grey)
+        bg_col_stat.set('Light')
+        for index in range(4):
+            laf.Labels.label_Small(fdRap, label_list[index], light_grey, dark_grey, index + 2, 1)
+        laf.Labels.label_Pics(fdRap, logo, light_grey, 1, 2)
+        laf.Labels.label_Interact(fdRap, name, font_name, light_grey, dark_grey, 3, 2)
+        laf.Labels.label_Interact(fdRap, prename, font_name, light_grey, dark_grey, 4, 2)
+        laf.label_h_Left(fdRap, "Aktueller Tag:", font_name, light_grey, dark_grey, 5, 2)
         bgstate += 1
     else:
         main_window.config(bg=dark_grey)
+        raF.Raster.rasterTop(fdRap, dark_grey)
+        raF.Raster.rasterSide(fdRap, dark_grey)
         labelUhr.config(bg=dark_grey, fg=light_grey)
-        labelUhr.grid(row=1, column=3, padx=10)
         men.menutaskbar(main_window, dark_grey, light_grey)
-        raF.Raster.rasterTop(frame1, dark_grey)
-        raF.Raster.rasterSide(frame1, dark_grey)
+        stylenotebook.configure("BW.TLabel", background=dark_grey)
+        fdRap.configure(bg=dark_grey)
+        fwRap.configure(bg=dark_grey)
+        fComm.configure(bg=dark_grey)
+        bg_col_stat.set('Dark')
         for index in range(4):
-            laf.Labels.label_Small(main_window, label_list[index], font_name, dark_grey, light_grey, i + 1, 0)
-        laf.Labels.label_Pics(main_window, logo, dark_grey, 0, 1)
-        laf.Labels.label_Interact(main_window, name, font_name, dark_grey, light_grey, 2, 1)
-        laf.Labels.label_Interact(main_window, prename, font_name, dark_grey, light_grey, 3, 1)
-        laf.label_h_Left(main_window, "Aktueller Tag:", font_name, dark_grey, light_grey, 4, 1)
-        buf.Buttons.com_button(main_window, 'Light/Dark', font_name, dark_grey, light_grey, changeBackground, 15, 0)
+            laf.Labels.label_Small(fdRap, label_list[index], dark_grey, light_grey, index + 2, 1)
+        laf.Labels.label_Pics(fdRap, logo, dark_grey, 1, 2)
+        laf.Labels.label_Interact(fdRap, name, font_name, dark_grey, light_grey, 3, 2)
+        laf.Labels.label_Interact(fdRap, prename, font_name, dark_grey, light_grey, 4, 2)
+        laf.label_h_Left(fdRap, "Aktueller Tag:", font_name, dark_grey, light_grey, 5, 2)
         bgstate += 1
 
 
 def askYesNo(msg, scomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
-        textfeld.insert(END, scomm + ': ')
-        textfeld.insert(INSERT, mef.set_Date())
+        textfeldday.insert(END, scomm + ': ')
+        textfeldday.insert(INSERT, mef.set_Date())
 
 
 def items_selected(event):
@@ -92,7 +97,6 @@ def items_selected(event):
 
 but_state_count = 0
 bgstate = 0
-
 time_but_col = 'green'
 dark_grey = '#2b2b2b'  # darkgrey
 light_grey = '#5c5c5c'  # lightgrey
@@ -102,28 +106,29 @@ label_list = ["Mitarbeiter", "Name", "Vorname", "Baustelle:", "Aktueller Tag:", 
 
 main_window = tk.Tk()
 main_window.title("Take your Worktime")
-main_window.geometry('920x500')
-main_window.minsize(width=920, height=500)
+main_window.geometry('920x550')
+main_window.minsize(width=920, height=550)
 main_window.configure(bg=dark_grey)
-notebook = ttk.Notebook(main_window)
-notebook.grid()
-
-frame1 = tk.Frame(notebook, width=920, height=500)
-frame2 = tk.Frame(notebook, width=920, height=500)
-frame3 = tk.Frame(notebook, width=920, height=500)
-frame1.configure(bg=dark_grey)
-frame2.configure(bg=dark_grey)
-frame3.configure(bg=dark_grey)
-frame1.grid()
-frame2.grid()
-frame3.grid()
-
-notebook.add(frame1, text='Tagesrapport')
-notebook.add(frame2, text='Wochenrapport')
-notebook.add(frame3, text='Offerte')
 logo = tk.PhotoImage(file='logo.png')
-for i in range(8):
-    laf.label_View(main_window, "", font_titel, dark_grey, light_grey, 0, i)
+pdRap = tk.PhotoImage(file='pdRap.png')
+pwRap = tk.PhotoImage(file='pwRap.png')
+pComm = tk.PhotoImage(file='pCom.png')
+stylenotebook = ttk.Style()
+stylenotebook.configure("BW.TLabel", background=dark_grey)
+notebook = ttk.Notebook(main_window, style="BW.TLabel")
+notebook.grid(row=0, column=0)
+fdRap = tk.Frame(notebook, width=920, height=500)
+fwRap = tk.Frame(notebook, width=920, height=500)
+fComm = tk.Frame(notebook, width=920, height=500)
+fSett = tk.Frame(notebook, width=920, height=500)
+frameList = [fdRap, fwRap, fComm, fSett]
+for framename in frameList:
+    framename.configure(bg=dark_grey)
+    framename.grid()
+notebook.add(fdRap, text='Tagesrapport:')
+notebook.add(fwRap, text='Wochenrapport:')
+notebook.add(fComm, text='Kommission:')
+notebook.add(fSett, text='Einstellungen:')
 
 but_state = tk.StringVar()
 but_state.set('Start')
@@ -133,34 +138,50 @@ prename = tk.StringVar()
 prename.set('Hanspeter')
 comm_list = 'Adliswil', 'Bettlach', 'Aarau', 'Schöftland', 'Bulle', 'Lausanne'
 comm_list_var = tk.StringVar(value=comm_list)
+bg_col_stat = tk.StringVar()
+bg_col_stat.set('Dark')
+# TagesrapportSeite
 
-labelUhr = tk.Label(main_window, font=font_name,
-                    bg=dark_grey, fg=light_grey)
-labelUhr.grid(row=0, column=3, padx=10)
+raF.Raster.rasterTop(fdRap, dark_grey)
+raF.Raster.rasterSide(fdRap, dark_grey)
+labelUhr = tk.Label(fdRap, font=font_name, bg=dark_grey, fg=light_grey)
+labelUhr.grid(row=1, column=4)
 zeit = ''
-
 men.menutaskbar(main_window, dark_grey, light_grey)
-laf.Labels.label_Pics(main_window, logo, dark_grey, 0, 1)
+laf.Labels.label_Pics(fdRap, logo, dark_grey, 1, 2)
 for i in range(4):
-    laf.Labels.label_Small(main_window, label_list[i], font_name, dark_grey, light_grey, i + 1, 0)
-
-laf.Labels.label_Interact(main_window, name, font_name, dark_grey, light_grey, 2, 1)
-laf.Labels.label_Interact(main_window, prename, font_name, dark_grey, light_grey, 3, 1)
-laf.label_h_Left(main_window, "Aktueller Tag:", font_name, dark_grey, light_grey, 4, 1)
-
-listbox = Listbox(frame1, listvariable=comm_list_var, height=10, selectmode='browse')
-listbox.grid(row=5, column=0, padx=5, sticky='W')
-
-textfeld = Text(main_window, height=10, width=75)
-textfeld.grid(row=5, column=1, columnspan=3, padx=5, sticky='W')
-buf.Buttons.com_button(main_window, 'Light/Dark', font_name, dark_grey, light_grey, changeBackground, 15, 0)
-
-time_button = tk.Button(main_window, textvariable=but_state, font=font_name, bg=time_but_col, fg=dark_grey, width=10,
-                        height=2,
-                        command=changeStat)
-time_button.grid(row=6, column=3, padx=25)
-
+    laf.Labels.label_Small(fdRap, label_list[i], dark_grey, light_grey, i + 2, 1)
+laf.Labels.label_Interact(fdRap, name, font_name, dark_grey, light_grey, 3, 2)
+laf.Labels.label_Interact(fdRap, prename, font_name, dark_grey, light_grey, 4, 2)
+laf.label_h_Left(fdRap, "Aktueller Tag:", font_name, dark_grey, light_grey, 5, 2)
+listbox = Listbox(fdRap, listvariable=comm_list_var, height=10, selectmode='browse')
+listbox.grid(row=6, column=1, padx=5, sticky='W')
+textfeldday = Text(fdRap, height=10, width=75)
+textfeldday.grid(row=6, column=2, columnspan=3, padx=5, sticky='W')
+buf.Buttons.time_button(fdRap, but_state, font_name, time_but_col, dark_grey, changeStat)
 listbox.bind('<<ListboxSelect>>', items_selected)
+
+# Wochenrapportseite
+
+raF.Raster.rasterTop(fwRap, dark_grey)
+raF.Raster.rasterSide(fwRap, dark_grey)
+laf.Labels.label_Titel(fwRap, 'Aktueller Wochenrapport:', dark_grey, light_grey)
+textfeldweek = Text(fwRap, width=100, height=25)
+textfeldweek.grid(row=2, column=1)
+# Kommissionsseite
+raF.Raster.rasterTop(fComm, dark_grey)
+raF.Raster.rasterSide(fComm, dark_grey)
+laf.Labels.label_Titel(fComm, 'Komission:', dark_grey, light_grey)
+comm_det_lab = ['Kom.Nr.', 'Adresse', 'Ort/Plz']
+for num in range(3):
+    laf.Labels.label_Small(fComm, comm_det_lab[num], dark_grey, light_grey, num + 2, 1)
+
+# Einstellungsseite
+raF.Raster.rasterTop(fSett, dark_grey)
+raF.Raster.rasterSide(fSett, dark_grey)
+laf.Labels.label_Titel(fSett, 'Einstellungen:', dark_grey, light_grey)
+buf.Buttons.com_button_interact(fSett, bg_col_stat, font_name, dark_grey, light_grey, changeBackground, 7, 1)
+
 
 tick()
 main_window.mainloop()

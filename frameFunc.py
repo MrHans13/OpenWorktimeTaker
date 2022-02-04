@@ -10,4 +10,4 @@ class Frames:
             .grid(row=2, column=1, rowspan=7)
 
     def notbookFrame(self, b):
-        tk.Frame(self, bg=b, width=920, height=500).grid()
+        tk.Frame(self, bg=b, width=920, height=500).pack()

@@ -15,4 +15,4 @@ class Raster:
         for i in range(23):
             tk.Label(self, bg=b, width=2,
                      height=2).grid(row=i + 1, column=0,
-                                    padx=2, pady=2, sticky='w')
+                                    padx=2, pady=2)

@@ -11,14 +11,16 @@ class Labels:
         self.c = l_col
         self.p = l_pic
 
-    def label_Small(self, t, fo, b, f, r, c):
-        tk.Label(self, text=t, font=fo, bg=b, fg=f).grid(row=r, column=c, padx=5, sticky='W')
+    def label_Small(self, t, b, f, r, c):
+        tk.Label(self, text=t, font=('Sans Serif', 12),
+                 bg=b, fg=f,
+                 width=10).grid(row=r, column=c, padx=5, sticky='w')
 
     def label_Interact(self, l_text, fo, b, f, r, c):
         tk.Label(self, textvariable=l_text, font=fo, bg=b, fg=f).grid(row=r, column=c, padx=5, sticky='W')
 
     def label_Titel(self, l_text, b, f):
-        tk.Label(self, text=l_text, font=('Sans Serif', 20), bg=b, fg=f).grid(row=1, column=1, padx=5, sticky='W')
+        tk.Label(self, text=l_text, font=('Sans Serif', 20), bg=b, fg=f).grid(row=1, column=1, columnspan=2, padx=5, sticky='W')
 
 
     def label_Pics(self, p, b, r, c):
