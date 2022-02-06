@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 
 class Labels:
@@ -11,28 +12,26 @@ class Labels:
         self.c = l_col
         self.p = l_pic
 
-    def label_Small(self, l_text, l_bg, l_fg, l_row, l_col, l_size):
-        tk.Label(self, text=l_text, font=('Sans Serif', l_size),
-                 bg=l_bg, fg=l_fg). \
+    def label_ttk(self, l_text, l_style, l_row, l_col):
+        ttk.Label(self, text=l_text, style=l_style).grid(row=l_row, column=l_col)
+
+    def label_Small(self, l_text, l_style, l_row, l_col):
+        ttk.Label(self, text=l_text, style=l_style). \
             grid(row=l_row, column=l_col, padx=5, sticky='W')
 
-    def label_Interact(self, l_text, fo, b, f, r, c):
-        tk.Label(self, textvariable=l_text, font=fo,
-                 bg=b, fg=f). \
+    def label_Interact(self, l_text, s, r, c):
+        ttk.Label(self, textvariable=l_text, style=s). \
             grid(row=r, column=c, padx=5, sticky='W')
 
-    def label_Titel(self, t, b, f):
-        tk.Label(self, text=t, font=('Sans Serif', 20),
-                 bg=b, fg=f). \
-            grid(row=1, column=1, columnspan=2, padx=5,
+    def label_Titel(self, t, s):
+        ttk.Label(self, text=t, style=s). \
+            grid(row=2, column=1, columnspan=3, padx=5,
                  sticky='W')
 
-    def label_Pics(self, p, b, r, c):
-        tk.Label(self, image=p, bg=b).grid(row=r, column=c, columnspan=2)
+    def label_Pics(self, p, s):
+        ttk.Label(self, image=p, style=s).grid(row=1, column=1, columnspan=2)
 
-    def label_h_Left(self, t, fo, b, f, r, c):
-        tk.Label(self, text=t, font=fo, bg=b, fg=f).grid(row=r, column=c, padx=5, sticky='W')
+    def label_h_Left(self, t, s, r, c):
+        ttk.Label(self, text=t, style=s).grid(row=r, column=c, padx=5, sticky='W')
 
 
-def label_View(win, t, fo, b, f, r, c):
-    tk.Label(win, text=t, font=fo, bg=b, fg=f, width=15).grid(row=r, column=c, padx=5.4, sticky='W')

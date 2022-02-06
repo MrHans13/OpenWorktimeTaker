@@ -1,6 +1,5 @@
 from tkinter import *
 
-
 def menutaskbar(win, b, f):
     menubar = Menu(win, bg=b, fg=f, relief='flat')
     win.config(menu=menubar)
