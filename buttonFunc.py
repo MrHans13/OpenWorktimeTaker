@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import ttk
 
 
@@ -6,32 +5,12 @@ class Buttons:
     def __init__(self, b):
         self.b_bg = b
 
-    def com_button(self, t, s, com, r, c):
-        ttk.Button(self, text=t, style=s, command=com).grid(row=r, column=c)
+    def com_button(self, t, p, s, com, r, c):
+        ttk.Button(self, text=t, image=p, style=s, command=com, compound='center').grid(row=r, column=c)
 
-    def com_button_interact(self, t, s, com, r, c):
-        ttk.Button(self, textvariable=t, style=s, command=com).grid(row=r, column=c)
-
-    def c_but_l_act(self, t, fo, b, f, com, r):
-        tk.Button(self, textvariable=t, font=fo,
-                  bg=b, fg=f,
-                  width=10, command=com).grid(row=r, column=1)
-
-    def c_but_hl_act(self, t, fo, b, f, com, r):
-        tk.Button(self, textvariable=t, font=fo,
-                  bg=b, fg=f,
-                  width=10, command=com).grid(row=r, column=2)
-
-    def c_but_hr_act(self, t, fo, b, f, com, r):
-        tk.Button(self, textvariable=t, font=fo,
-                  bg=b, fg=f,
-                  width=10, command=com).grid(row=r, column=3)
-
-    def c_but_r_act(self, t, fo, b, f, com, r):
-        tk.Button(self, textvariable=t, font=fo,
-                  bg=b, fg=f,
-                  width=10, command=com).grid(row=r, column=3)
+    def com_button_interact(self, t, p, s, com, r, c):
+        ttk.Button(self, textvariable=t, image=p, style=s, command=com, compound='center').grid(row=r, column=c)
 
     def time_button(self, t, s, com):
         ttk.Button(self, textvariable=t, style=s,
-                   command=com).grid(row=8, column=4)
+                   command=com).grid(row=9, column=4)

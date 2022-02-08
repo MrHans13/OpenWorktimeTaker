@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import ttk
 
 
@@ -11,9 +10,6 @@ class Labels:
         self.r = l_row
         self.c = l_col
         self.p = l_pic
-
-    def label_ttk(self, l_text, l_style, l_row, l_col):
-        ttk.Label(self, text=l_text, style=l_style).grid(row=l_row, column=l_col)
 
     def label_Small(self, l_text, l_style, l_row, l_col):
         ttk.Label(self, text=l_text, style=l_style). \
@@ -30,8 +26,3 @@ class Labels:
 
     def label_Pics(self, p, s):
         ttk.Label(self, image=p, style=s).grid(row=1, column=1, columnspan=2)
-
-    def label_h_Left(self, t, s, r, c):
-        ttk.Label(self, text=t, style=s).grid(row=r, column=c, padx=5, sticky='W')
-
-

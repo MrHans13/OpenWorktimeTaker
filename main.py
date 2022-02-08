@@ -83,15 +83,15 @@ def changeBackground():
         main_window.config(bg=light_grey)
         stylenotebook.configure("BW.TLabel", background=light_grey, foreground=dark_grey)
         styleLabel.configure("SL.TLabel", font=('Calibri', 20), background=light_grey, foreground=dark_grey)
-        buttonstyle.configure("bstyle.TButton", background=light_grey, foreground=dark_grey)
+        buttonstyle.configure("bstyle.TButton", font=('Calibri', 12), background=dark_grey, foreground=light_grey)
         meF.menutaskbar(main_window, light_grey, dark_grey)
         bg_col_stat.set('Dark')
         bgstate += 1
     else:
         main_window.config(bg=dark_grey)
-        stylenotebook.configure("BW.TLabel", background=dark_grey, foreground=light_grey)
+        stylenotebook.configure("BW.TLabel", background=dark_grey, foreground=dark_grey)
         styleLabel.configure("SL.TLabel", font=('Calibri', 20), background=dark_grey, foreground=light_grey)
-        buttonstyle.configure("bstyle.TButton", font=('Calibri', 16), background=dark_grey, foreground=light_grey)
+        buttonstyle.configure("bstyle.TButton", font=('Calibri', 12), background=dark_grey, foreground=light_grey)
         meF.menutaskbar(main_window, dark_grey, light_grey)
         bg_col_stat.set('Light')
         bgstate += 1
@@ -184,9 +184,11 @@ notepic = tk.PhotoImage(file='note_bg.png')
 
 # Styles
 styleLabel = ttk.Style()
-styleLabel.configure("SL.TLabel", font=('Calibri', 20), background=dark_grey, foreground=light_grey)
+styleLabel.configure("SL.TLabel", font=('Calibri', 16), background=dark_grey, foreground=light_grey)
+titelStyle = ttk.Style()
+titelStyle.configure("tS.TLabel", font=('Calibri', 20), background=dark_grey, foreground=light_grey)
 buttonstyle = ttk.Style()
-buttonstyle.configure("bstyle.TButton", font=('Calibri', 16), background=dark_grey, foreground=light_grey)
+buttonstyle.configure("bstyle.TButton", font=('Calibri', 12), background=dark_grey, foreground=light_grey)
 stylenotebook = ttk.Style()
 stylenotebook.configure("BW.TLabel", background=dark_grey, foreground=light_grey)
 sty_On_Off = ttk.Style()
@@ -203,13 +205,14 @@ fr_ferien = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
 
 # NB Seiten erstellen
 frameList = [fdRap, fwRap, fComm, fSett, fr_ferien]
-label_list = ["Mitarbeiter", "Name", "Vorname", "Baustelle:", "Aktueller Tag:", "Light/Dark"]
+label_list = ["Mitarbeiter", "Name", "Vorname", "Baustelle:"]
 note_list = ['Tagesrapport', 'Wochenrapport', 'Kommission', 'Einstellungen', 'Ferien']
 for index in range(len(frameList)):
     laF.Labels.label_Pics(frameList[index], logo, "BW.TLabel")
     notebook.add(frameList[index], text=note_list[index], image=notepic, compound='center')
-    laF.Labels.label_Titel(frameList[index], note_list[index], "SL.TLabel")
+    laF.Labels.label_Titel(frameList[index], note_list[index], "tS.TLabel")
     raF.Raster.rasterCompl(frameList[index], "BW.TLabel")
+for index in range(len(label_list)):
     laF.Labels.label_Small(fdRap, label_list[index], "SL.TLabel", index + 4, 1)
 
 # TagesrapportSeite
@@ -220,14 +223,14 @@ zeit = ''
 laF.Labels.label_Interact(fdRap, name, "SL.TLabel", 5, 2)
 laF.Labels.label_Interact(fdRap, prename, "SL.TLabel", 6, 2)
 listbox = Listbox(fdRap, listvariable=comm_list_var, height=10, selectmode='browse')
-listbox.grid(row=7, column=1, padx=5, sticky='W')
+listbox.grid(row=8, column=1, padx=5, sticky='W')
 textfeldday = Text(fdRap, height=10, width=75)
-textfeldday.grid(row=7, column=2, columnspan=3, padx=5, sticky='W')
+textfeldday.grid(row=8, column=2, columnspan=3, padx=5, sticky='W')
 buF.Buttons.time_button(fdRap, timebut_text, "onOff.TButton", change_T_B_Stat)
 listbox.bind('<<ListboxSelect>>', items_selected)
 
 # Wochenrapportseite
-fo_but = ttk.Button(fwRap, text='File open', style="bstyle.TButton", command=openFile)
+fo_but = ttk.Button(fwRap, text='File open', image=notepic, style="bstyle.TButton", command=openFile, compound='center')
 fo_but.grid(row=1, column=3, sticky='E')
 pathh = Entry(fwRap)
 pathh.grid(row=1, column=4, sticky='W')
@@ -236,14 +239,15 @@ textfeldweek.grid(row=3, column=1, columnspan=4, rowspan=10)
 
 # Kommissionsseite
 comm_det_lab = ['Kom.Nr.', 'Adresse', 'Ort/Plz']
+laF.Labels.label_Titel(fComm, 'Aktuelle Kommission:', "tS.TLabel")
 for num in range(3):
     laF.Labels.label_Small(fComm, comm_det_lab[num], "SL.TLabel", num + 3, 1)
 
 # Einstellungsseite
 laF.Labels.label_Small(fSett, 'Styling ändern:', "SL.TLabel", 7, 1)
-laF.Labels.label_Small(fSett, 'Alle Daten löschen::', "SL.TLabel", 8, 1)
-buF.Buttons.com_button_interact(fSett, bg_col_stat, "bstyle.TButton", changeBackground, 7, 2)
-buF.Buttons.com_button(fSett, 'Werkszustand', "bstyle.TButton", prF.factory_Reset, 8, 2)
+laF.Labels.label_Small(fSett, 'Werkszustand herstellen:', "SL.TLabel", 12, 1)
+buF.Buttons.com_button_interact(fSett, bg_col_stat, notepic, "bstyle.TButton", changeBackground, 7, 2)
+buF.Buttons.com_button(fSett, 'Werkszustand', notepic, "bstyle.TButton", prF.factory_Reset, 12, 2)
 
 checkTbutton()
 checkProgStat()

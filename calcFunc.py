@@ -15,3 +15,5 @@ def calc_Work_Time():
         work_hours -= 1
     daF.write_Stat_Data('.workmin.txt',str(work_minutes))
     daF.write_Stat_Data('.workhour.txt', str(work_hours))
+
+
