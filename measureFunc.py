@@ -1,9 +1,5 @@
 import time
-import dataTransfer as dat
-
-statecounter = 0
-filestate = 0
-
+import dataFunc as daF
 
 
 def set_Date():
@@ -12,41 +8,46 @@ def set_Date():
     month = str(now.tm_mon)
     year = str(now.tm_year)
     if int(day) < 10:
-        day = str(0) + day
+        day = '0' + day
     if int(month) < 10:
-        month = str(0) + month
-    return day + '.' + month + '.' + year
+        month = '0' + month
+    daF.write_Stat_Data('.day.txt', day)
+    daF.write_Stat_Data('.month.txt', month)
+    daF.write_Stat_Data('.year.txt', year)
 
 
-def set_Time():
-    global statecounter
-    set_Hour()
-    set_Min()
-    statecounter += 1
-
-
-def set_Min():
-    global statecounter
+def set_Start_Time():
     now = time.localtime()
     minute = str(now.tm_min)
-    if statecounter % 2 == 0:
-        dat.dataWrite('.min_start.txt', minute)
-    if statecounter % 2 == 1:
-        dat.dataWrite('.min_stop.txt', minute)
+    hour = str(now.tm_hour)
     if int(minute) < 10:
-        return str(0) + minute
-    else:
-        return minute
+        minute = '0' + minute
+    if int(hour) < 10:
+        hour = '0' + hour
+    daF.write_Stat_Data('.min_start.txt', minute)
+    daF.write_Stat_Data('.hour_start.txt', hour)
 
 
-def set_Hour():
+def set_Stop_Time():
+    set_Stop_Hour()
+    set_Stop_Min()
+
+
+def set_Stop_Min():
+    now = time.localtime()
+    minute = str(now.tm_min)
+    if int(minute) < 10:
+        minute = '0' + minute
+    data = open('.min_stop.txt', 'w')
+    data.write(minute)
+    data.close()
+
+
+def set_Stop_Hour():
     now = time.localtime()
     hour = str(now.tm_hour)
-    if statecounter % 2 == 0:
-        dat.dataWrite('.hour_start.txt', hour)
-    if statecounter % 2 == 1:
-        dat.dataWrite('.hour_stop.txt', hour)
     if int(hour) < 10:
-        return str(0) + hour
-    else:
-        return hour
+        hour = '0' + hour
+    data = open('.hour_stop.txt', 'w')
+    data.write(hour)
+    data.close()
