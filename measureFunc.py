@@ -29,25 +29,13 @@ def set_Start_Time():
 
 
 def set_Stop_Time():
-    set_Stop_Hour()
-    set_Stop_Min()
-
-
-def set_Stop_Min():
     now = time.localtime()
     minute = str(now.tm_min)
+    hour = str(now.tm_hour)
     if int(minute) < 10:
         minute = '0' + minute
-    data = open('.min_stop.txt', 'w')
-    data.write(minute)
-    data.close()
-
-
-def set_Stop_Hour():
-    now = time.localtime()
-    hour = str(now.tm_hour)
     if int(hour) < 10:
         hour = '0' + hour
-    data = open('.hour_stop.txt', 'w')
-    data.write(hour)
-    data.close()
+    daF.write_Stat_Data('.min_stop.txt', minute)
+    daF.write_Stat_Data('.hour_stop.txt', hour)
+
