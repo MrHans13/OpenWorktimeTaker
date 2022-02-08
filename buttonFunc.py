@@ -6,9 +6,8 @@ class Buttons:
     def __init__(self, b):
         self.b_bg = b
 
-    def com_button(self, t, fo, b_bg, f, com, r, c):
-        tk.Button(self, text=t, font=fo,
-                  bg=b_bg, fg=f, command=com).grid(row=r, column=c)
+    def com_button(self, t, s, com, r, c):
+        ttk.Button(self, text=t, style=s, command=com).grid(row=r, column=c)
 
     def com_button_interact(self, t, s, com, r, c):
         ttk.Button(self, textvariable=t, style=s, command=com).grid(row=r, column=c)

@@ -1,15 +1,19 @@
+#!/usr/bin/env python3
+
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 import time
 import measureFunc as mef
-import labelFunc as laf
-import menuFunc as men
+import labelFunc as laF
+import menuFunc as meF
 import tkinter.messagebox as mbox
-import buttonFunc as buf
-import worktimeCalc as woc
+import buttonFunc as buF
 import rasterFunc as raF
+import dataFunc as daF
+import calcFunc as caF
+import printFunc as prF
 
 
 def tick():
@@ -21,24 +25,56 @@ def tick():
     labelUhr.after(200, tick)
 
 
-def changeStat():
-    global but_state_count
-    global time_but_col
-    if but_state_count % 2 == 0:
-        but_state.set('Stop')
-        time_but_col = 'red'
-        buf.Buttons.time_button(fdRap, but_state, "bstyle.TButton", changeStat)
-        mef.set_Time()
-        textfeldday.insert(INSERT, '\t' + mef.set_Hour() + ':' + mef.set_Min())
+def change_T_B_Stat():
+    timeButState = daF.read_Int('.workState.txt')
+    fileState = daF.read_Int('.fileState.txt')
+    if timeButState == 0:
+        if fileState < 2:
+            mbox.showinfo('Achtung', 'bitte erst\nKommission auswählen...')
+        if 2 <= fileState < 4:
+            timebut_text.set('Stop')
+            styleLabel.configure("onOff.TButton", font=('Calibri', 18), background='red', foreground=dark_grey)
+            mef.set_Start_Time()
+            daF.write_Stat_Data('.workState.txt', '1')
+            daF.write_Stat_Data('.fileState.txt', '3')
+            daF.write_Stat_Data('.workState.txt', '1')
+            prF.print_To_dRap()
+            dailyRap()
+        if fileState >= 4:
+            timebut_text.set('Stop')
+            styleLabel.configure("onOff.TButton", font=('Calibri', 18), background='red', foreground=dark_grey)
+            mef.set_Start_Time()
+            daF.write_Stat_Data('.workState.txt', '1')
+            daF.write_Stat_Data('.fileState.txt', '5')
+            prF.print_To_dRap()
+            dailyRap()
+
     else:
-        but_state.set('Start')
-        time_but_col = 'green'
-        buf.Buttons.time_button(fdRap, but_state, "bstyle.TButton", changeStat)
-        textfeldday.insert(INSERT, ' - ' + mef.set_Hour() + ':' + mef.set_Min() + '\t')
-        #        result = woc.worktime_calc()
-        textfeldday.insert(INSERT, '\t' + woc.worktime_calc() + '\n')
-        mef.set_Time()
-    but_state_count += 1
+        timebut_text.set('Start')
+        styleLabel.configure("onOff.TButton", font=('Calibri', 18), background='green', foreground=dark_grey)
+        daF.write_Stat_Data('.workState.txt', '0')
+        if fileState < 5:
+            daF.write_Stat_Data('.fileState.txt', '4')
+        else:
+            daF.write_Stat_Data('.fileState.txt', '6')
+        mef.set_Stop_Time()
+        caF.calc_Work_Time()
+        prF.print_To_dRap()
+
+        dailyRap()
+
+
+def dailyRap():
+    datei = open("DailyRapport.txt", "r")
+    textfeldday.delete("1.0", "end")
+    for zeile in datei:
+        textfeldday.insert(INSERT, zeile)
+
+
+def weeklyRap():
+    datei = open("WeeklyRapport.txt", "r")
+    for zeile in datei:
+        textfeldweek.insert(INSERT, zeile)
 
 
 def changeBackground():
@@ -47,8 +83,8 @@ def changeBackground():
         main_window.config(bg=light_grey)
         stylenotebook.configure("BW.TLabel", background=light_grey, foreground=dark_grey)
         styleLabel.configure("SL.TLabel", font=('Calibri', 20), background=light_grey, foreground=dark_grey)
-        buttonstyle.configure("bstyle.TButton", font=('Calibri', 16), background=light_grey, foreground=dark_grey)
-        men.menutaskbar(main_window, light_grey, dark_grey)
+        buttonstyle.configure("bstyle.TButton", background=light_grey, foreground=dark_grey)
+        meF.menutaskbar(main_window, light_grey, dark_grey)
         bg_col_stat.set('Dark')
         bgstate += 1
     else:
@@ -56,7 +92,7 @@ def changeBackground():
         stylenotebook.configure("BW.TLabel", background=dark_grey, foreground=light_grey)
         styleLabel.configure("SL.TLabel", font=('Calibri', 20), background=dark_grey, foreground=light_grey)
         buttonstyle.configure("bstyle.TButton", font=('Calibri', 16), background=dark_grey, foreground=light_grey)
-        men.menutaskbar(main_window, dark_grey, light_grey)
+        meF.menutaskbar(main_window, dark_grey, light_grey)
         bg_col_stat.set('Light')
         bgstate += 1
 
@@ -64,8 +100,12 @@ def changeBackground():
 def askYesNo(msg, scomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
-        textfeldday.insert(END, scomm + ': ')
-        textfeldday.insert(INSERT, mef.set_Date())
+        daF.write_Stat_Data('.comm.txt', scomm)
+        daF.write_Stat_Data('.fileState.txt', '2')
+        daF.write_Stat_Data('.weekState.txt', '1')
+        daF.write_Stat_Data('.dayState.txt', '1')
+        prF.print_To_dRap()
+        dailyRap()
 
 
 def items_selected(event):
@@ -88,25 +128,59 @@ def openFile():
     tf.close()
 
 
-global_state = 0
-but_state_count = 0
+def checkTbutton():
+    timeButState = daF.read_Int('.workState.txt')
+    if timeButState == 0:
+        timebut_text.set('Start')
+        styleLabel.configure("onOff.TButton", font=('Calibri', 18), background='green', foreground=dark_grey)
+    else:
+        timebut_text.set('Stop')
+        styleLabel.configure("onOff.TButton", font=('Calibri', 18), background='red', foreground=dark_grey)
+
+
+def checkProgStat():
+    progState = daF.read_Int('.progState.txt')
+
+    if progState == 0:
+        mef.set_Date()
+        daF.write_titelWrap()
+        daF.write_titelDrap()
+        daF.write_Stat_Data('.progState.txt', '1')
+        daF.write_Stat_Data('.fileState.txt', '1')
+        dailyRap()
+    if progState > 0:
+        dailyRap()
+
+
 bgstate = 0
-time_but_col = 'green'
 dark_grey = '#2b2b2b'  # darkgrey
 light_grey = '#5c5c5c'  # lightgrey
 
 # Main Window start
 main_window = tk.Tk()
 main_window.title("Open Worktime Tracker")
-main_window.geometry('800x550')
+main_window.geometry('850x550')
 main_window.minsize(width=800, height=550)
 main_window.configure(bg=dark_grey)
 
+# variables
+timebut_text = tk.StringVar()
+
+name = tk.StringVar()
+name.set('Flütsch')
+prename = tk.StringVar()
+prename.set('Hanspeter')
+comm_list_file = open('commision_file.txt', 'r')
+comm_list = comm_list_file.read().split()
+comm_list_file.close()
+comm_list_var = tk.StringVar()
+comm_list_var.set(comm_list)
+bg_col_stat = tk.StringVar()
+bg_col_stat.set('Dark')
+
 # Pictures
-logo = tk.PhotoImage(file='logo_002.2.png')
-pdRap = tk.PhotoImage(file='pdRap.png')
-pwRap = tk.PhotoImage(file='pwRap.png')
-pComm = tk.PhotoImage(file='pCom.png')
+logo = tk.PhotoImage(file='logo_002.1.png')
+notepic = tk.PhotoImage(file='note_bg.png')
 
 # Styles
 styleLabel = ttk.Style()
@@ -115,6 +189,8 @@ buttonstyle = ttk.Style()
 buttonstyle.configure("bstyle.TButton", font=('Calibri', 16), background=dark_grey, foreground=light_grey)
 stylenotebook = ttk.Style()
 stylenotebook.configure("BW.TLabel", background=dark_grey, foreground=light_grey)
+sty_On_Off = ttk.Style()
+sty_On_Off.configure("onOff.TButton", font=('Calibri', 18), background='green', foreground=dark_grey)
 
 # notebook
 notebook = ttk.Notebook(main_window, style="BW.TLabel")
@@ -123,45 +199,31 @@ fdRap = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
 fwRap = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
 fComm = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
 fSett = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
+fr_ferien = ttk.Frame(notebook, width=920, height=500, style="BW.TLabel")
 
 # NB Seiten erstellen
-frameList = [fdRap, fwRap, fComm, fSett]
+frameList = [fdRap, fwRap, fComm, fSett, fr_ferien]
 label_list = ["Mitarbeiter", "Name", "Vorname", "Baustelle:", "Aktueller Tag:", "Light/Dark"]
-note_list = ['Tagesrapport', 'Wochenrapport', 'Kommission', 'Einstellungen']
+note_list = ['Tagesrapport', 'Wochenrapport', 'Kommission', 'Einstellungen', 'Ferien']
 for index in range(len(frameList)):
-    laf.Labels.label_Pics(frameList[index], logo, "BW.TLabel")
-    frameList[index].grid()
-    notebook.add(frameList[index], text=note_list[index], image=pwRap, compound='center')
-    laf.Labels.label_Titel(frameList[index], note_list[index], "SL.TLabel")
+    laF.Labels.label_Pics(frameList[index], logo, "BW.TLabel")
+    notebook.add(frameList[index], text=note_list[index], image=notepic, compound='center')
+    laF.Labels.label_Titel(frameList[index], note_list[index], "SL.TLabel")
     raF.Raster.rasterCompl(frameList[index], "BW.TLabel")
-    laf.Labels.label_Small(fdRap, label_list[index], "SL.TLabel", index + 4, 1)
-
-# variables
-but_state = tk.StringVar()
-but_state.set('Start')
-name = tk.StringVar()
-name.set('Flütsch')
-prename = tk.StringVar()
-prename.set('Hanspeter')
-comm_list = 'Adliswil', 'Bettlach', 'Aarau', 'Schöftland', 'Bulle', 'Lausanne'
-comm_list_var = tk.StringVar()
-comm_list_var.set(comm_list)
-bg_col_stat = tk.StringVar()
-bg_col_stat.set('Dark')
+    laF.Labels.label_Small(fdRap, label_list[index], "SL.TLabel", index + 4, 1)
 
 # TagesrapportSeite
-men.menutaskbar(main_window, dark_grey, light_grey)
+meF.menutaskbar(main_window, dark_grey, light_grey)
 labelUhr = ttk.Label(fdRap, style="SL.TLabel")
 labelUhr.grid(row=1, column=4, sticky='N')
 zeit = ''
-laf.Labels.label_Interact(fdRap, name, "SL.TLabel", 5, 2)
-laf.Labels.label_Interact(fdRap, prename, "SL.TLabel", 6, 2)
-laf.Labels.label_h_Left(fdRap, "Aktueller Tag:", "SL.TLabel", 8, 3)
+laF.Labels.label_Interact(fdRap, name, "SL.TLabel", 5, 2)
+laF.Labels.label_Interact(fdRap, prename, "SL.TLabel", 6, 2)
 listbox = Listbox(fdRap, listvariable=comm_list_var, height=10, selectmode='browse')
 listbox.grid(row=7, column=1, padx=5, sticky='W')
 textfeldday = Text(fdRap, height=10, width=75)
 textfeldday.grid(row=7, column=2, columnspan=3, padx=5, sticky='W')
-buf.Buttons.time_button(fdRap, but_state, "bstyle.TButton", changeStat)
+buF.Buttons.time_button(fdRap, timebut_text, "onOff.TButton", change_T_B_Stat)
 listbox.bind('<<ListboxSelect>>', items_selected)
 
 # Wochenrapportseite
@@ -175,10 +237,15 @@ textfeldweek.grid(row=3, column=1, columnspan=4, rowspan=10)
 # Kommissionsseite
 comm_det_lab = ['Kom.Nr.', 'Adresse', 'Ort/Plz']
 for num in range(3):
-    laf.Labels.label_Small(fComm, comm_det_lab[num], "SL.TLabel", num + 3, 1)
+    laF.Labels.label_Small(fComm, comm_det_lab[num], "SL.TLabel", num + 3, 1)
 
 # Einstellungsseite
-buf.Buttons.com_button_interact(fSett, bg_col_stat, "bstyle.TButton", changeBackground, 7, 1)
+laF.Labels.label_Small(fSett, 'Styling ändern:', "SL.TLabel", 7, 1)
+laF.Labels.label_Small(fSett, 'Alle Daten löschen::', "SL.TLabel", 8, 1)
+buF.Buttons.com_button_interact(fSett, bg_col_stat, "bstyle.TButton", changeBackground, 7, 2)
+buF.Buttons.com_button(fSett, 'Werkszustand', "bstyle.TButton", prF.factory_Reset, 8, 2)
 
+checkTbutton()
+checkProgStat()
 tick()
 main_window.mainloop()
