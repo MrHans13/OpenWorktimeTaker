@@ -1,5 +1,10 @@
 def write_Stat_Data(textfile, msg):
     f = open(textfile, 'w')
+    f.write(str(msg))
+    f.close()
+
+def append_Data(textfile, msg):
+    f = open(textfile, 'a')
     f.write(msg)
     f.close()
 

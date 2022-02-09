@@ -21,8 +21,9 @@ class Labels:
 
     def label_Titel(self, t, s):
         ttk.Label(self, text=t, style=s). \
-            grid(row=2, column=1, columnspan=3, padx=5,
-                 sticky='W')
+            grid(row=2, column=1, padx=5, sticky='W')
 
-    def label_Pics(self, p, s):
-        ttk.Label(self, image=p, style=s).grid(row=1, column=1, columnspan=2)
+    def label_Logo(self, p, s):
+        ttk.Label(self, image=p, style=s).grid(row=1, column=1,
+                                               columnspan=2,
+                                               sticky='W')

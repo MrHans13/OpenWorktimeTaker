@@ -2,12 +2,8 @@ import dataFunc as daF
 
 
 def calc_Work_Time():
-    wt_minute_start = daF.read_Int('.min_start.txt')
-    wtminute_stop = daF.read_Int('.min_stop.txt')
-    wt_hour_start = daF.read_Int('.hour_start.txt')
-    wt_hour_stop = daF.read_Int('.hour_stop.txt')
-    work_minutes = wtminute_stop - wt_minute_start
-    work_hours = wt_hour_stop - wt_hour_start
+    work_minutes = daF.read_Int('.min_stop.txt') - daF.read_Int('.min_start.txt')
+    work_hours = daF.read_Int('.hour_stop.txt') - daF.read_Int('.hour_start.txt')
     if work_hours < 0:
         work_hours += 24
     if work_minutes < 0:

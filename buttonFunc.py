@@ -13,4 +13,4 @@ class Buttons:
 
     def time_button(self, t, s, com):
         ttk.Button(self, textvariable=t, style=s,
-                   command=com).grid(row=9, column=4)
+                   command=com).grid(row=17, column=4)

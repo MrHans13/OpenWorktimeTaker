@@ -16,9 +16,8 @@ def print_To_dRap():
     o_time = daF.read_Str('UeZeit.txt')
     if fileState == 2:
         daF.write_titelDrap()
-        f = open('DailyRapport.txt', 'a')
-        f.write(day + '.' + month + '.' + year + '\t\t' + commision)
-        f.close()
+        daF.append_Data('DailyRapport.txt', day + '.' + month + '.' + year + '\t\t' + commision)
+
     if fileState == 3:
         daF.write_titelDrap()
         f = open('DailyRapport.txt', 'a')
@@ -48,9 +47,10 @@ def print_To_dRap():
 def factory_Reset():
     datalist = '.hour_start.txt', '.hour_stop.txt', '.min_start.txt', '.min_stop.txt', \
                '.workmin.txt', '.workhour.txt', '.comm.txt', '.day.txt', \
-               '.month.txt', '.year.txt', 'DailyRapport.txt'
+               '.month.txt', '.year.txt', 'DailyRapport.txt', '.name.txt', '.prename.txt', \
+               '.user.txt'
     statelist = '.progState.txt', '.fileState.txt', '.weekState.txt', '.dayState.txt', \
-                '.workState.txt'
+                '.workState.txt', '.userState.txt'
     for i in range(len(datalist)):
         daF.data_clear(datalist[i])
     for i in range(len(statelist)):
