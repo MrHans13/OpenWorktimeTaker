@@ -55,7 +55,7 @@ def push_Timebutton():
     else:
         timebut_text.set('Start')
         style_On_Off.configure("onOff.TButton", font=('Calibri', 18), background='green', foreground=dark_grey)
-        daF.write_Stat_Data('.workState.txt', '0')
+        daF.write_Stat_Data('.state_work.txt', '0')
         if fileState < 5:
             daF.write_Stat_Data('.state_file.txt', '4')
         else:
@@ -97,7 +97,7 @@ def askYesNo(msg, scomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
         fileState = daF.read_Int('.state_file.txt')
-        workstate = daF.read_Int('.workState.txt')
+        workstate = daF.read_Int('.state_work.txt')
         if workstate == 1:
             mbox.showinfo('Achtung', 'Sie müssen erst Zeit stoppen.\n'
                                      'Kommission wird beim nächsten Start automatisch\n'
@@ -141,7 +141,7 @@ def restart(root):
     root.mainloop()
 
 def checkTbutton():
-    work_state = daF.read_Int('.workState.txt')
+    work_state = daF.read_Int('.state_work.txt')
     if work_state == 0:
         timebut_text.set('Start')
         style_On_Off.configure("onOff.TButton", font=('Calibri', 18), background='green', foreground=dark_grey)
@@ -199,16 +199,16 @@ main_window.configure(bg=dark_grey)
 
 # variables
 timebut_text = tk.StringVar()
-u_name = tk.StringVar(value=daF.read_Str('.user.txt'))
-name = tk.StringVar(value=daF.read_Str('.name.txt'))
-prename = tk.StringVar(value=daF.read_Str('.prename.txt'))
-comm_list = daF.read_List('commision_file.txt')
+u_name = tk.StringVar(value=daF.r_Str_temp('.user_nr.txt'))
+name = tk.StringVar(value=daF.r_Str_temp('.user_name.txt'))
+prename = tk.StringVar(value=daF.r_Str_temp('.user_prename.txt'))
+comm_list = daF.read_List('.list_commisions.txt')
 comm_list_var = tk.StringVar(value=comm_list)
 bg_col_stat = tk.StringVar(value='Light')
 
 # Pictures
-logo = tk.PhotoImage(file='logo_001.png')
-notepic = tk.PhotoImage(file='note_bg.png')
+logo = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/logo_001.png')
+notepic = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/note_bg.png')
 
 # Styles
 style_L_small = ttk.Style()

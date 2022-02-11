@@ -11,9 +11,9 @@ def set_Date():
         day = '0' + day
     if int(month) < 10:
         month = '0' + month
-    daF.write_Stat_Data('.day.txt', day)
-    daF.write_Stat_Data('.month.txt', month)
-    daF.write_Stat_Data('.year.txt', year)
+    daF.write_Stat_Data('.act_day.txt', day)
+    daF.write_Stat_Data('.act_month.txt', month)
+    daF.write_Stat_Data('.act_year.txt', year)
 
 
 def set_Start_Time():
@@ -24,8 +24,8 @@ def set_Start_Time():
         minute = '0' + minute
     if int(hour) < 10:
         hour = '0' + hour
-    daF.write_Stat_Data('.min_start.txt', minute)
-    daF.write_Stat_Data('.hour_start.txt', hour)
+    daF.write_Stat_Data('.m_start.txt', minute)
+    daF.write_Stat_Data('.h_start.txt', hour)
 
 
 def set_Stop_Time():
@@ -36,5 +36,5 @@ def set_Stop_Time():
         minute = '0' + minute
     if int(hour) < 10:
         hour = '0' + hour
-    daF.write_Stat_Data('.min_stop.txt', minute)
-    daF.write_Stat_Data('.hour_stop.txt', hour)
+    daF.write_Stat_Data('.m_stop.txt', minute)
+    daF.write_Stat_Data('.h_stop.txt', hour)

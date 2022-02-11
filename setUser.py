@@ -19,9 +19,9 @@ def create_User_Set_Win(win):
     user_name = tk.Entry(user_set_win, textvariable=var_u_name)
     user_name.grid(row=2, column=1)
 
-    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.name.txt', var_name.get()))
-    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.prename.txt', var_prename.get()))
-    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.user.txt', var_u_name.get()))
+    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.user_name.txt', var_name.get()))
+    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.user_prename.txt', var_prename.get()))
+    var_u_name.trace("w", lambda *args: daF.write_Stat_Data('.user_nr.txt', var_u_name.get()))
 
     # Registrierbutton
     tk.Button(user_set_win, text='Registrieren',

@@ -3,9 +3,9 @@ import day_R_Func as drF
 
 
 def reset_Factory():
-    com_list = daF.read_List('.com_file_list.txt')
-    state_list = daF.read_List('.list_state_files.txt')
-    user_list = daF.read_List('.user_file_list.txt')
+    com_list = daF.read_List('.list_com_files.txt')
+    state_list = daF.read_List('temp/.list_state_files.txt')
+    user_list = daF.read_List('temp/.list_user_files.txt')
     for i in range(len(com_list)):
         daF.data_clear(com_list[i])
     for i in range(len(state_list)):
@@ -16,14 +16,14 @@ def reset_Factory():
 
 
 def reset_User():
-    user_list = daF.read_List('.user_file_list.txt')
+    user_list = daF.read_List('.list_user_files.txt')
     for i in range(len(user_list) - 1):
         daF.data_clear(user_list[i])
     daF.state_Reset('.state_user.txt')
 
 
 def reset_data(textfeldday):
-    com_list = daF.read_List('.com_file_list.txt')
+    com_list = daF.read_List('.list_com_files.txt')
     for i in range(len(com_list)):
         daF.data_clear(com_list[i])
     daF.write_Stat_Data('.state_file.txt', '0')
