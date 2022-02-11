@@ -5,13 +5,14 @@ class Raster:
     def __init__(self, r_bg):
         self.b = r_bg
 
-    def rasterCompl(self, b):
+    def rasterVert(self, b):
         for i in range(9):
             ttk.Label(self, style=b).grid(row=0, column=i + 1,
                                           padx=2)
+
+    def rasterHor(self, b):
         for i in range(23):
-            ttk.Label(self, style=b).grid(row=i + 1, column=0,
-                                          padx=2, pady=2)
+            ttk.Label(self, style=b).grid(row=i + 1, column=0, pady=5)
 
     def rasterTtk(self, l_text, l_style):
         for i4 in range(9):
