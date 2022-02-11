@@ -1,12 +1,22 @@
+
+
 def write_Stat_Data(textfile, msg):
     f = open(textfile, 'w')
     f.write(str(msg))
     f.close()
 
+
 def append_Data(textfile, msg):
     f = open(textfile, 'a')
     f.write(msg)
     f.close()
+
+
+def read_List(list_file):
+    comm_list_file = open(list_file, 'r')
+    comm_list = comm_list_file.read().split()
+    comm_list_file.close()
+    return comm_list
 
 
 def read_Str(textfile):
@@ -23,16 +33,6 @@ def read_Int(textfile):
     return data
 
 
-def write_titelWrap():
-    data = open('WeeklyRapport.txt', 'w')
-    data.write("Datum:\t\tKomission:\tStart:\tStop:\tZeit:\tÜ-Zeit:\n")
-    data.close()
-
-
-def write_titelDrap():
-    data = open('DailyRapport.txt', 'w')
-    data.write("Datum:\t\tKomission:\t\tStart:\tStop:\tZeit:\tÜ-Zeit:\n")
-    data.close()
 
 
 def data_clear(textfile):

@@ -1,0 +1,6 @@
+.state_prog.txt
+.state_file.txt
+.state_week.txt
+.state_day.txt
+.state_work.txt
+.state_com.txt

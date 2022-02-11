@@ -1,12 +1,12 @@
 import dataFunc as daF
-
+import day_R_Func as drF
 
 def print_To_dRap():
-    fileState = daF.read_Int('.fileState.txt')
+    fileState = daF.read_Int('.state_file.txt')
     day = daF.read_Str('.day.txt')
     month = daF.read_Str('.month.txt')
     year = daF.read_Str('.year.txt')
-    commision = daF.read_Str('.comm.txt')
+    commision = daF.read_Str('.act_com.txt')
     start_min = daF.read_Str('.min_start.txt')
     stop_min = daF.read_Str('.min_stop.txt')
     start_hour = daF.read_Str('.hour_start.txt')
@@ -15,17 +15,17 @@ def print_To_dRap():
     work_hour = daF.read_Str('.workhour.txt')
     o_time = daF.read_Str('UeZeit.txt')
     if fileState == 2:
-        daF.write_titelDrap()
+        drF.write_titelDrap()
         daF.append_Data('DailyRapport.txt', day + '.' + month + '.' + year + '\t\t' + commision)
 
     if fileState == 3:
-        daF.write_titelDrap()
+        drF.write_titelDrap()
         f = open('DailyRapport.txt', 'a')
         f.write(day + '.' + month + '.' + year + '\t\t' + commision + '\t\t' +
                 start_hour + ':' + start_min)
         f.close()
     if fileState == 4:
-        daF.write_titelDrap()
+        drF.write_titelDrap()
         f = open('DailyRapport.txt', 'a')
         f.write(day + '.' + month + '.' + year + '\t\t' + commision + '\t\t' +
                 start_hour + ':' + start_min + '\t' + stop_hour +
@@ -44,14 +44,3 @@ def print_To_dRap():
         f.close()
 
 
-def factory_Reset():
-    datalist = '.hour_start.txt', '.hour_stop.txt', '.min_start.txt', '.min_stop.txt', \
-               '.workmin.txt', '.workhour.txt', '.comm.txt', '.day.txt', \
-               '.month.txt', '.year.txt', 'DailyRapport.txt', '.name.txt', '.prename.txt', \
-               '.user.txt'
-    statelist = '.progState.txt', '.fileState.txt', '.weekState.txt', '.dayState.txt', \
-                '.workState.txt', '.userState.txt'
-    for i in range(len(datalist)):
-        daF.data_clear(datalist[i])
-    for i in range(len(statelist)):
-        daF.state_Reset(statelist[i])

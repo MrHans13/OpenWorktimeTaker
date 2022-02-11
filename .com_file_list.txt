@@ -1,0 +1,12 @@
+.hour_start.txt
+.hour_stop.txt
+.min_start.txt
+.min_stop.txt
+.workmin.txt
+.workhour.txt
+.list_com_files.txt
+.day.txt
+.month.txt
+.year.txt
+DailyRapport.txt
+WeeklyRapport.txt

@@ -38,4 +38,3 @@ def set_Stop_Time():
         hour = '0' + hour
     daF.write_Stat_Data('.min_stop.txt', minute)
     daF.write_Stat_Data('.hour_stop.txt', hour)
-

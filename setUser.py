@@ -11,10 +11,7 @@ def create_User_Set_Win(win):
     for i in range(len(label_list)):
         tk.Label(user_set_win, text=label_list[i]).grid(row=i, column=0)
     # Entry erstellen
-    var_name = tk.StringVar()
-    var_prename = tk.StringVar()
-    var_u_name = tk.StringVar()
-
+    var_name, var_prename, var_u_name = tk.StringVar(), tk.StringVar(), tk.StringVar()
     name = tk.Entry(user_set_win, textvariable=var_name)
     name.grid(row=0, column=1)
     prename = tk.Entry(user_set_win, textvariable=var_prename)
@@ -28,10 +25,10 @@ def create_User_Set_Win(win):
 
     # Registrierbutton
     tk.Button(user_set_win, text='Registrieren',
-              command=lambda: register_User(user_set_win)).grid(row=3, column=0, columnspan=4)
+              command=lambda: register_User(user_set_win)).grid(row=3, column=1, columnspan=2)
 
 
 def register_User(win):
-    daF.write_Stat_Data('.userState.txt', '1')
-    daF.write_Stat_Data('.progState.txt', '1')
+    daF.write_Stat_Data('.state_user.txt', '1')
+    daF.write_Stat_Data('.state_prog.txt', '1')
     win.destroy()
