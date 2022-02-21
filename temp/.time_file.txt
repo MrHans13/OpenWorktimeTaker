@@ -1,0 +1,1 @@
+{'starthour': '20', 'startmin': '07', 'stophour': '20', 'stopmin': '10', 'workhour': 0, 'workmin': 3, 'workhourges': '-7', 'workminges': '-73'}

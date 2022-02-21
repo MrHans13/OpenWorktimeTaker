@@ -2,7 +2,7 @@ from tkinter import INSERT
 
 
 def dailyRap(textfeldday):
-    datei = open("Rap_D.txt", "r")
+    datei = open("temp/Rap_D.txt", "r")
     textfeldday.delete("1.0", "end")
     for zeile in datei:
         textfeldday.insert(INSERT, zeile)
@@ -13,12 +13,12 @@ def write_titelDrap():
 
 
 def a_data_dRap(msg):
-    f = open('Rap_D.txt', 'a')
+    f = open('temp/Rap_D.txt', 'a')
     f.write(msg)
     f.close()
 
 
 def w_data_dRap(msg):
-    f = open('Rap_D.txt', 'w')
+    f = open('temp/Rap_D.txt', 'w')
     f.write(msg)
     f.close()

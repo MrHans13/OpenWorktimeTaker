@@ -1,0 +1,1 @@
+{'ue_min': 0, 'ue_hour': 0, 'ue_zeit': '9h23min', 'soll_t': '8'}

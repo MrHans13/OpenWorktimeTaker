@@ -24,9 +24,9 @@ def create_User_Set_Win(win):
     user_name.grid(row=3, column=1)
 
     # Daten in Files schreiben
-    var_number.trace("w", lambda *args: daF.set_Data('user_hpf.txt', 'u_number', var_number.get()))
-    var_u_name.trace("w", lambda *args: daF.set_Data('user_hpf.txt', 'u_name', var_u_name.get()))
-    var_u_prename.trace("w", lambda *args: daF.set_Data('user_hpf.txt', 'u_prename', var_u_prename.get()))
+    var_number.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_number', var_number.get()))
+    var_u_name.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_name', var_u_name.get()))
+    var_u_prename.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_prename', var_u_prename.get()))
 
     # Registrierbutton
     tk.Button(user_set_win, text='Registrieren',
@@ -36,6 +36,6 @@ def create_User_Set_Win(win):
 def register_User(win1, win2):
     mBox.showinfo('Achtung', 'Programm muss neu gestartet werden.\n'
                              'Programm beenden?')
-    daF.set_Data('.prog_states.txt', 'user_state', 1)
+    daF.set_data('temp/.prog_states.txt', 'user_state', 1)
     win1.destroy()
     win2.destroy()

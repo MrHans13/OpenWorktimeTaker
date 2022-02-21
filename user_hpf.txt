@@ -1,1 +1,0 @@
-{'u_prename': 'Hanspeter', 'u_name': 'Flütsch', 'u_number': '0012', 'u_pw': ' '}

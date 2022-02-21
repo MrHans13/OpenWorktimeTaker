@@ -3,8 +3,8 @@ import time
 import datetime
 
 
-def get_Act_Date():
-    state_data = open('.act_date.txt', 'r')
+def get_act_date():
+    state_data = open('temp/.act_date.txt', 'r')
     state_dict_str = state_data.read()
     state_data.close()
     state_dict = ast.literal_eval(state_dict_str)
@@ -15,7 +15,7 @@ def get_Act_Date():
     return date
 
 
-def set_Act_Date():
+def set_act_date():
     now = time.localtime()
     day = str(now.tm_mday)
     month = str(now.tm_mon)
@@ -26,13 +26,13 @@ def set_Act_Date():
     if int(month) < 10:
         month = '0' + month
     date_dict = {'day': day, 'month': month, 'year': year, 'kw': str(kw)}
-    f = open('.act_date.txt', 'w')
+    f = open('temp/.act_date.txt', 'w')
     f.write(str(date_dict))
     f.close()
     return day + '.' + month + '.' + year
 
 
-def set_Data(file, state, s):
+def set_data(file, state, s):
     state_data = open(file, 'r')
     state_dict_str = state_data.read()
     state_data.close()
@@ -75,7 +75,7 @@ def data_clear(textfile):
 
 
 def data_temp_clear(textfile):
-    f = open('/home/peti/Projects/OpenWtTaker/temp/' + textfile, 'w')
+    f = open('temp/' + textfile, 'w')
     f.write(' ')
     f.close()
 

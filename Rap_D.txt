@@ -1,4 +1,0 @@
-Datum:		Komission:		Start:	Stop:	Zeit:	Ü-Zeit:
-18.02.2022		220001		13:55	13:55	0h0min	3h13min
-18.02.2022		220002		17:56	21:11	3h15min	3h13min
-				21:11
