@@ -43,7 +43,7 @@ def set_data(file, state, s):
     f.close()
 
 
-def get_str_Data(file, state):
+def get_str_data(file, state):
     state_data = open(file, 'r')
     state_dict_str = state_data.read()
     state_data.close()
@@ -52,7 +52,7 @@ def get_str_Data(file, state):
     return str(act_state)
 
 
-def get_int_Data(file, state):
+def get_int_data(file, state):
     state_data = open(file, 'r')
     state_dict_str = state_data.read()
     state_data.close()
@@ -61,7 +61,7 @@ def get_int_Data(file, state):
     return int(act_state)
 
 
-def read_List(list_file):
+def read_lists(list_file):
     comm_list_file = open(list_file, 'r')
     comm_list = comm_list_file.read().split()
     comm_list_file.close()
@@ -78,6 +78,3 @@ def data_temp_clear(textfile):
     f = open('temp/' + textfile, 'w')
     f.write(' ')
     f.close()
-
-
-

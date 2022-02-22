@@ -7,6 +7,7 @@ from tkinter import filedialog
 import tkinter.messagebox as mbox
 import time
 import Func_Button as buF
+import Func_Calc as caF
 import Func_Data as daF
 import Func_Labels as laF
 import Func_measure as meaF
@@ -15,7 +16,6 @@ import Func_Raster as raF
 import Func_Rap_Week as wrF
 import Func_Rap_Day as drF
 import Func_Sys_Settings as syS
-import Func_Comm as coF
 import Win_Set_User as seU
 
 
@@ -29,37 +29,31 @@ def tick():
 
 
 def pushtimebutton():
-    work_state = daF.get_int_Data('temp/.prog_states.txt', 'work_state')
-    comm_state = daF.get_int_Data('temp/.prog_states.txt', 'comm_state')
-    file_state = daF.get_int_Data('temp/.prog_states.txt', 'file_state')
+    comm_state = daF.get_int_data('temp/.prog_states.txt', 'comm_state')
+    work_state = daF.get_int_data('temp/.prog_states.txt', 'work_state')
+    file_state = daF.get_int_data('temp/.prog_states.txt', 'file_state')
     if comm_state == 0:
         mbox.showinfo('Achtung', 'bitte erst\nKommission auswählen...')
     else:
         if work_state == 0:
-            meaF.set_Start_Time(textfeldday)
+            meaF.set_time(work_state)
             timebutton_text.set('Stop')
             style_On_Off.configure("onOff.TButton", background='red')
             daF.set_data('temp/.prog_states.txt', 'work_state', 1)
-            daF.set_data('temp/.prog_states.txt', 'tBut_state', 1)
             if file_state >= 1:
                 daF.set_data('temp/.prog_states.txt', 'file_state', file_state + 1)
         else:
+            daF.set_data('temp/.prog_states.txt', 'work_state', 0)
             reply = mbox.askyesno('Achtung', 'Wollen Sie die kommission beenden?')
             if reply:
-                meaF.set_Stop_Time(textfeldday)
+                caF.calc_work_time()
                 timebutton_text.set('Start')
                 style_On_Off.configure("onOff.TButton", background='green')
-                daF.set_data('temp/.prog_states.txt', 'work_state', 0)
-                daF.set_data('temp/.prog_states.txt', 'tBut_state', 0)
-                daF.set_data('temp/.prog_states.txt', 'comm_state', comm_state + 1)
-                coF.finish_Comm(textfeldweek)
-
+                daF.set_data('temp/.prog_states.txt', 'comm_state', 0)
             else:
-                meaF.set_Stop_Time(textfeldday)
                 timebutton_text.set('Start')
                 style_On_Off.configure("onOff.TButton", background='green')
-                daF.set_data('temp/.prog_states.txt', 'work_state', 0)
-                daF.set_data('temp/.prog_states.txt', 'tBut_state', 0)
+                caF.calc_work_time()
                 if file_state >= 2:
                     daF.set_data('temp/.prog_states.txt', 'file_state', file_state + 1)
 
@@ -93,25 +87,23 @@ def change_background():
 def select_com(msg, selectedcomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
-        workstate = daF.get_int_Data('temp/.prog_states.txt', 'work_state')
-        filestate = daF.get_int_Data('temp/.prog_states.txt', 'file_state')
+        daF.set_data('temp/act_comm.txt', 'c_nr', selectedcomm)
+        workstate = daF.get_int_data('temp/.prog_states.txt', 'work_state')
+        filestate = daF.get_int_data('temp/.prog_states.txt', 'file_state')
         if workstate == 1:
             mbox.showinfo('Achtung', 'Sie müssen erst Zeit stoppen.')
         else:
+            daF.set_data('temp/.prog_states.txt', 'comm_state', 1)
             if filestate == 1:
-                daF.set_data('temp/act_comm.txt', 'c_nr', selectedcomm)
-                drF.a_data_dRap(str(daF.set_act_date()))
-                drF.a_data_dRap('\t\t' + selectedcomm)
-                drF.dailyRap(textfeldday)
-                daF.set_data('temp/.prog_states.txt', 'comm_state', 1)
-                daF.set_data('temp/.prog_states.txt', 'week_state', 1)
-                daF.set_data('temp/.prog_states.txt', 'day_state', 1)
+                drF.a_data_drap(str(daF.set_act_date()))
+                drF.a_data_drap('\t\t' + selectedcomm)
+                drF.write_daily_tf(textfeldday)
             if filestate > 1:
                 daF.set_data('temp/act_comm.txt', 'c_nr', selectedcomm)
                 daF.set_data('temp/.prog_states.txt', 'file_state', 2)
-                drF.a_data_dRap('\n' + str(daF.set_act_date()))
-                drF.a_data_dRap('\t\t' + selectedcomm)
-                drF.dailyRap(textfeldday)
+                drF.a_data_drap('\n' + str(daF.set_act_date()))
+                drF.a_data_drap('\t\t' + selectedcomm)
+                drF.write_daily_tf(textfeldday)
 
 
 def items_selected(event):
@@ -127,14 +119,14 @@ def open_file():
         title="Open Text file",
         filetypes=(("Text Files", "*.*"),),
     )
-    tf = open(tf, 'r')  # or tf = open(tf, 'r')
+    tf = open(tf, 'r')
     data = tf.read()
     textfeldweek.insert(END, data)
     tf.close()
 
 
 def check_timebutton_state():
-    work_state = daF.get_int_Data('temp/.prog_states.txt', 'work_state')
+    work_state = daF.get_int_data('temp/.prog_states.txt', 'work_state')
     if work_state == 0:
         timebutton_text.set('Start')
         style_On_Off.configure("onOff.TButton", font=('Calibri', 12), background='green', foreground='black')
@@ -144,150 +136,149 @@ def check_timebutton_state():
 
 
 def check_user_state():
-    user_state = daF.get_int_Data('temp/.prog_states.txt', 'user_state')
+    user_state = daF.get_int_data('temp/.prog_states.txt', 'user_state')
     if user_state == 0:
         mbox.showinfo('Achtung', 'Kein User registriert.\n'
                                  'User registrieren')
-        seU.create_User_Set_Win(main_window)
+        seU.create_user_set_win(main_window)
     daF.set_data('temp/.prog_states.txt', 'prog_state', 1)
 
 
 def check_prog_state():
-    progstate = daF.get_int_Data('temp/.prog_states.txt', 'prog_state')
-    filestate = daF.get_int_Data('temp/.prog_states.txt', 'file_state')
+    progstate = daF.get_int_data('temp/.prog_states.txt', 'prog_state')
+    filestate = daF.get_int_data('temp/.prog_states.txt', 'file_state')
     if progstate == 1:
         if filestate == 0:
-            drF.write_titelDrap()
+            drF.write_titel_drap()
             daF.set_data('temp/.prog_states.txt', 'file_state', 1)
-            drF.dailyRap(textfeldday)
+            drF.write_daily_tf(textfeldday)
         else:
-            drF.dailyRap(textfeldday)
+            drF.write_daily_tf(textfeldday)
 
 
 ################################################################################
 # Main Window start
 ################################################################################
+if __name__ == "__main__":
 
-main_window = tk.Tk()
-main_window.title("Open Worktime Tracker")
-main_window.geometry('790x510')
-main_window.minsize(width=790, height=565)
-bgstate = 0
-d_grey = '#2b2b2b'
-l_grey = '#5c5c5c'
+    main_window = tk.Tk()
+    main_window.title("Open Worktime Tracker")
+    main_window.geometry('790x510')
+    main_window.minsize(width=790, height=565)
+    bgstate = 0
+    d_grey = '#2b2b2b'
+    l_grey = '#5c5c5c'
 
-main_window.configure(bg=d_grey)
+    main_window.configure(bg=d_grey)
 
-# variables
-timebutton_text = tk.StringVar()
-u_name = tk.StringVar(value=daF.get_str_Data('temp/user_hpf.txt', 'u_name'))
-u_prename = tk.StringVar(value=daF.get_str_Data('temp/user_hpf.txt', 'u_prename'))
-u_number = tk.StringVar(value=daF.get_str_Data('temp/user_hpf.txt', 'u_number'))
-comm_list = daF.read_List('temp/.list_commisions.txt')
-comm_list_var = tk.StringVar(value=comm_list)
-bg_col_stat = tk.StringVar(value='Light')
-act_date = tk.StringVar(value=daF.get_act_date())
-# Pictures
-logo = tk.PhotoImage(file='picture/logo_001.png')
-notepic = tk.PhotoImage(file='picture/note_bg.png')
+    # variables
+    timebutton_text = tk.StringVar()
+    u_name = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_name'))
+    u_prename = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_prename'))
+    u_number = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_number'))
+    comm_list = daF.read_lists('temp/.list_commisions.txt')
+    comm_list_var = tk.StringVar(value=comm_list)
+    bg_col_stat = tk.StringVar(value='Light')
+    act_date = tk.StringVar(value=daF.get_act_date())
+    # Pictures
+    logo = tk.PhotoImage(file='picture/logo_001.1.png')
+    notepic = tk.PhotoImage(file='picture/note_bg.png')
 
-# Styles
-style_L_small = ttk.Style()
-style_L_small.configure("SL.TLabel", font=('Calibri', 14), background=d_grey, foreground=l_grey)
-style_titel = ttk.Style()
-style_titel.configure("tS.TLabel", font=('Calibri', 20), background=d_grey, foreground=l_grey)
-style_B_small = ttk.Style()
-style_B_small.configure("bstyle.TButton", font=('Calibri', 12), background=d_grey, foreground=l_grey)
-style_notebook = ttk.Style()
-style_notebook.configure("BW.TLabel", background=d_grey, foreground=l_grey)
-style_On_Off = ttk.Style()
-style_On_Off.configure("onOff.TButton", font=('Calibri', 12), background='green', foreground=d_grey)
-style_raster_hor = ttk.Style()
-style_raster_hor.configure("rSh.TLabel", background=d_grey, width=2)
-style_raster_ver = ttk.Style()
-style_raster_ver.configure("rSv.TLabel", background=d_grey, width=25)
+    # Styles
+    style_L_small = ttk.Style()
+    style_L_small.configure("SL.TLabel", font=('Calibri', 14), background=d_grey, foreground=l_grey)
+    style_titel = ttk.Style()
+    style_titel.configure("tS.TLabel", font=('Calibri', 20), background=d_grey, foreground=l_grey)
+    style_B_small = ttk.Style()
+    style_B_small.configure("bstyle.TButton", font=('Calibri', 12), background=d_grey, foreground=l_grey)
+    style_notebook = ttk.Style()
+    style_notebook.configure("BW.TLabel", background=d_grey, foreground=l_grey)
+    style_On_Off = ttk.Style()
+    style_On_Off.configure("onOff.TButton", font=('Calibri', 12), background='green', foreground=d_grey)
+    style_raster_hor = ttk.Style()
+    style_raster_hor.configure("rSh.TLabel", background=d_grey, width=2)
+    style_raster_ver = ttk.Style()
+    style_raster_ver.configure("rSv.TLabel", background=d_grey, width=25)
 
-# notebook
-notebook = ttk.Notebook(main_window, style="BW.TLabel")
-notebook.grid(row=0, column=0)
-fdRap = ttk.Frame(notebook, style="BW.TLabel")
-fwRap = ttk.Frame(notebook, style="BW.TLabel")
-fComm = ttk.Frame(notebook, style="BW.TLabel")
-fSett = ttk.Frame(notebook, style="BW.TLabel")
+    # notebook
+    notebook = ttk.Notebook(main_window, style="BW.TLabel")
+    notebook.grid(row=0, column=0)
+    fdRap = ttk.Frame(notebook, style="BW.TLabel")
+    fwRap = ttk.Frame(notebook, style="BW.TLabel")
+    fComm = ttk.Frame(notebook, style="BW.TLabel")
+    fSett = ttk.Frame(notebook, style="BW.TLabel")
 
-# Notebook Frames erstellen mit Logo und Titel
-frameList = [fdRap, fwRap, fComm, fSett]
-note_list = ['Tagesrapport', 'Wochenrapport', 'Kommission', 'Einstellungen']
-notebook.add(fdRap, text=note_list[0], image=notepic, compound='center')
-notebook.add(fwRap, text=note_list[1], image=notepic, compound='center')
-notebook.add(fComm, text=note_list[2], image=notepic, compound='center')
-notebook.add(fSett, text=note_list[3], image=notepic, compound='center')
-laF.label_logo(fdRap, logo, "BW.TLabel")
-laF.label_titel(fdRap, note_list[0], "tS.TLabel")
-raF.raster_vert(fdRap, "rSv.TLabel")
-raF.raster_hor(fdRap, "rSh.TLabel")
+    # Notebook Frames erstellen mit Logo und Titel
+    frameList = [fdRap, fwRap, fComm, fSett]
+    note_list = ['Tagesrapport', 'Wochenrapport', 'Kommission', 'Einstellungen']
+    for i in range(len(frameList)):
+        notebook.add(frameList[i], text=note_list[i], image=notepic, compound='center')
+        raF.raster_vert(frameList[i], "rSv.TLabel")
+        raF.raster_hor(frameList[i], "rSh.TLabel")
+        laF.label_logo(frameList[i], logo, "BW.TLabel")
+        laF.label_titel(frameList[i], note_list[i], "tS.TLabel")
 
-###########################################################
-# TagesrapportSeite
-###########################################################
-meF.menutaskbar(main_window, d_grey, l_grey, open_file)
+    ###########################################################
+    # TagesrapportSeite
+    ###########################################################
+    meF.menutaskbar(main_window, d_grey, l_grey, open_file)
 
-# Uhr
-labelUhr = ttk.Label(fdRap, style="SL.TLabel")
-labelUhr.grid(row=2, column=3, sticky='nw')
-acttime = ''
-ttk.Label(fdRap, textvariable=act_date, style="SL.TLabel").grid(row=1, column=3, sticky='sw')
+    # Uhr
+    labelUhr = ttk.Label(fdRap, style="SL.TLabel")
+    labelUhr.grid(row=2, column=3, sticky='nw')
+    acttime = ''
+    ttk.Label(fdRap, textvariable=act_date, style="SL.TLabel").grid(row=1, column=3, sticky='sw')
 
-# Mitarbeiter Label erstellen
-label_list = ["Mitarbeiter Nr.", "Name", "Vorname", "", "Kommission"]
-for index in range(len(label_list)):
-    laF.label_small(fdRap, label_list[index], "SL.TLabel", index + 4, 1)
-user_list = [u_number, u_name, u_prename]
-for i in range(len(user_list)):
-    laF.label_interact(fdRap, user_list[i], "SL.TLabel", i + 4, 2)
+    # Mitarbeiter Label erstellen
+    label_list = ["Mitarbeiter Nr.", "Name", "Vorname", "", "Kommission"]
+    for index in range(len(label_list)):
+        laF.label_small(fdRap, label_list[index], "SL.TLabel", index + 4, 1)
+    user_list = [u_number, u_name, u_prename]
+    for i in range(len(user_list)):
+        laF.label_interact(fdRap, user_list[i], "SL.TLabel", i + 4, 2)
 
-listbox = Listbox(fdRap, listvariable=comm_list_var, height=10, selectmode='browse')
-listbox.grid(row=9, column=1, padx=5, rowspan=7, sticky='W')
-listbox.bind('<<ListboxSelect>>', items_selected)
+    listbox = Listbox(fdRap, listvariable=comm_list_var, height=10, selectmode='browse')
+    listbox.grid(row=9, column=1, padx=5, rowspan=7, sticky='W')
+    listbox.bind('<<ListboxSelect>>', items_selected)
 
-textfeldday = Text(fdRap, height=10, width=65)
-textfeldday.grid(row=9, column=2, rowspan=7, columnspan=4, padx=5, sticky='W')
+    textfeldday = Text(fdRap, height=10, width=65)
+    textfeldday.grid(row=9, column=2, rowspan=7, columnspan=4, padx=5, sticky='W')
 
-buF.time_button(fdRap, timebutton_text, "onOff.TButton", pushtimebutton)
-################################################################################
-# Wochenrapportseite
-################################################################################
-textfeldweek = Text(fwRap, width=92, height=18)
-textfeldweek.grid(row=4, column=1, padx=5)
-buF.com_button(fwRap, 'Wochenrapport', notepic, "bstyle.TButton", wrF.weeklyRap(textfeldweek), 3, 1)
+    buF.time_button(fdRap, timebutton_text, "onOff.TButton", pushtimebutton)
+    ################################################################################
+    # Wochenrapportseite
+    ################################################################################
+    textfeldweek = Text(fwRap, width=92, height=18)
+    textfeldweek.grid(row=4, column=1, padx=5)
+    buF.com_button(fwRap, 'Wochenrapport', notepic, "bstyle.TButton", wrF.weekly_rap(textfeldweek), 3, 1)
 
-################################################################################
-# Kommissionsseite
-################################################################################
-comm_det_lab = ['Kom.Nr.', 'Adresse', 'Ort/Plz']
-laF.label_titel(fComm, 'Aktuelle Kommission', "tS.TLabel")
-for num in range(3):
-    laF.label_small(fComm, comm_det_lab[num], "SL.TLabel", num + 3, 1)
+    ################################################################################
+    # Kommissionsseite
+    ################################################################################
+    comm_det_lab = ['Kom.Nr.', 'Adresse', 'Ort/Plz']
+    laF.label_titel(fComm, 'Aktuelle Kommission', "tS.TLabel")
+    for num in range(3):
+        laF.label_small(fComm, comm_det_lab[num], "SL.TLabel", num + 3, 1)
 
-################################################################################
-# Einstellungsseite
-################################################################################
-dat_name_l = ['Programm          ',
-              'Daten löschen     ',
-              'User löschen      ',
-              'Werkszustand      ']
-dat_func_l = [syS.reset_Stats, syS.delete_Data, syS.reset_User, syS.reset_All]
-laF.label_small(fSett, 'Styling ändern    ', "SL.TLabel", 7, 1)
-buF.com_button_interact(fSett, bg_col_stat, "bstyle.TButton", change_background, 7, 2)
+    ################################################################################
+    # Einstellungsseite
+    ################################################################################
+    dat_name_l = ['Programm          ',
+                  'Daten löschen     ',
+                  'User löschen      ',
+                  'Werkszustand      ']
+    dat_func_l = [syS.reset_states, syS.delete_data, syS.reset_user, syS.reset_all]
+    laF.label_small(fSett, 'Styling ändern    ', "SL.TLabel", 7, 1)
+    buF.com_button_interact(fSett, bg_col_stat, notepic, "bstyle.TButton", change_background, 7, 2)
 
-buF.com_button(fSett, 'Userdaten ändern  ', notepic, "bstyle.TButton",
-               lambda: seU.create_User_Set_Win(main_window), 12, 2)
-for i in range(len(dat_name_l)):
-    laF.label_small(fSett, dat_name_l[i], "SL.TLabel", i + 8, 1)
-    buF.com_button(fSett, dat_name_l[i], notepic, "bstyle.TButton", dat_func_l[i], i + 8, 2)
+    buF.com_button(fSett, 'Userdaten ändern  ', notepic, "bstyle.TButton",
+                   lambda: seU.create_user_set_win(main_window), 12, 2)
+    for i in range(len(dat_name_l)):
+        laF.label_small(fSett, dat_name_l[i], "SL.TLabel", i + 8, 1)
+        buF.com_button(fSett, dat_name_l[i], notepic, "bstyle.TButton", dat_func_l[i], i + 8, 2)
 
-tick()
-check_timebutton_state()
-check_user_state()
-check_prog_state()
-main_window.mainloop()
+    tick()
+    check_timebutton_state()
+    check_user_state()
+    check_prog_state()
+    main_window.mainloop()

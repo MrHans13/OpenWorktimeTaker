@@ -1,1 +1,1 @@
-{'u_prename': 'hansp', 'u_name': 'Flütsch', 'u_number': '00123', 'u_pw': ' '}
+{'u_prename': 'Hanspeter', 'u_name': 'Flütsch', 'u_number': '001', 'u_pw': ' '}

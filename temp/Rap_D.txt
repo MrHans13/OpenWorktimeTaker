@@ -1,5 +1,7 @@
-Datum:		Komission:		Start:	Stop:	Zeit:	Ü-Zeit:
-21.02.2022		220001		20:02	20:02	0h0min	9h23min
-				20:02	20:03	0h1min	9h23min
-				20:06	20:06	0h0min	9h23min
-				20:07	20:10	0h3min	9h23min
+Datum:		Commission:		Start:	Stop:	Zeit:	Ü-Zeit:
+21.02.2022		Comm.001
+21.02.2022		Comm.002
+21.02.2022		Comm.001
+21.02.2022		Comm.002
+22.02.2022		Comm.001
+22.02.2022		Comm.002

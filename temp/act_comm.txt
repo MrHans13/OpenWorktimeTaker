@@ -1,1 +1,1 @@
-{'c_name': 'Projekt OWT', 'c_nr': '220001', 'c_min': '0', 'c_hour': '0', 'c_state': '0'}
+{'c_name': 'Projekt OWT', 'c_nr': 'Comm.002', 'c_min': '0', 'c_hour': '0', 'c_state': '0'}
