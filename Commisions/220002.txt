@@ -1,0 +1,1 @@
+{'c_worktime': 0, 'c_workhour': 0, 'c_workmin': 0, 'starthour': 16, 'startmin': 52, 'stophour': 16, 'stopmin': 52, 'workhour': 0, 'workmin': 0}

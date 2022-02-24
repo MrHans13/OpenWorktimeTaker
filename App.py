@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -10,7 +8,6 @@ import Func_Button as buF
 import Func_Calc as caF
 import Func_Data as daF
 import Func_Labels as laF
-import Func_measure as meaF
 import Func_Menu as meF
 import Func_Raster as raF
 import Func_Rap_Week as wrF
@@ -29,33 +26,34 @@ def tick():
 
 
 def pushtimebutton():
-    comm_state = daF.get_int_data('temp/.prog_states.txt', 'comm_state')
-    work_state = daF.get_int_data('temp/.prog_states.txt', 'work_state')
-    file_state = daF.get_int_data('temp/.prog_states.txt', 'file_state')
+    comm_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state')
+    work_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
+    file_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
+    act_comm = daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr')
     if comm_state == 0:
         mbox.showinfo('Achtung', 'bitte erst\nKommission auswählen...')
     else:
         if work_state == 0:
-            meaF.set_time(work_state)
+            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state', 1)
+            caF.set_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', work_state)
             timebutton_text.set('Stop')
             style_On_Off.configure("onOff.TButton", background='red')
-            daF.set_data('temp/.prog_states.txt', 'work_state', 1)
             if file_state >= 1:
-                daF.set_data('temp/.prog_states.txt', 'file_state', file_state + 1)
+                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', file_state + 1)
         else:
-            daF.set_data('temp/.prog_states.txt', 'work_state', 0)
+            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state', 0)
+            timebutton_text.set('Start')
+            style_On_Off.configure("onOff.TButton", background='green')
             reply = mbox.askyesno('Achtung', 'Wollen Sie die kommission beenden?')
+            caF.set_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', work_state)
+            caF.calc_work_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt')
             if reply:
-                caF.calc_work_time()
-                timebutton_text.set('Start')
-                style_On_Off.configure("onOff.TButton", background='green')
-                daF.set_data('temp/.prog_states.txt', 'comm_state', 0)
+                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state', 0)
             else:
-                timebutton_text.set('Start')
-                style_On_Off.configure("onOff.TButton", background='green')
-                caF.calc_work_time()
                 if file_state >= 2:
-                    daF.set_data('temp/.prog_states.txt', 'file_state', file_state + 1)
+                    daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', file_state + 1)
+                    caF.add_worktime('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', 'c_workmin', caF.calc_work_min('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt'))
+                    caF.add_worktime('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', 'c_workhour', caF.calc_work_hour('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt'))
 
 
 def change_background():
@@ -87,20 +85,20 @@ def change_background():
 def select_com(msg, selectedcomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
-        daF.set_data('temp/act_comm.txt', 'c_nr', selectedcomm)
-        workstate = daF.get_int_data('temp/.prog_states.txt', 'work_state')
-        filestate = daF.get_int_data('temp/.prog_states.txt', 'file_state')
+        daF.set_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr', selectedcomm)
+        workstate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
+        filestate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
         if workstate == 1:
             mbox.showinfo('Achtung', 'Sie müssen erst Zeit stoppen.')
         else:
-            daF.set_data('temp/.prog_states.txt', 'comm_state', 1)
+            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state', 1)
             if filestate == 1:
                 drF.a_data_drap(str(daF.set_act_date()))
                 drF.a_data_drap('\t\t' + selectedcomm)
                 drF.write_daily_tf(textfeldday)
             if filestate > 1:
-                daF.set_data('temp/act_comm.txt', 'c_nr', selectedcomm)
-                daF.set_data('temp/.prog_states.txt', 'file_state', 2)
+                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr', selectedcomm)
+                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', 2)
                 drF.a_data_drap('\n' + str(daF.set_act_date()))
                 drF.a_data_drap('\t\t' + selectedcomm)
                 drF.write_daily_tf(textfeldday)
@@ -115,7 +113,7 @@ def items_selected(event):
 
 def open_file():
     tf = filedialog.askopenfilename(
-        initialdir="/temp/",
+        initialdir="/home/peti/Projects/OpenWtTaker/Commisions/",
         title="Open Text file",
         filetypes=(("Text Files", "*.*"),),
     )
@@ -126,7 +124,7 @@ def open_file():
 
 
 def check_timebutton_state():
-    work_state = daF.get_int_data('temp/.prog_states.txt', 'work_state')
+    work_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
     if work_state == 0:
         timebutton_text.set('Start')
         style_On_Off.configure("onOff.TButton", font=('Calibri', 12), background='green', foreground='black')
@@ -136,21 +134,21 @@ def check_timebutton_state():
 
 
 def check_user_state():
-    user_state = daF.get_int_data('temp/.prog_states.txt', 'user_state')
+    user_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'user_state')
     if user_state == 0:
         mbox.showinfo('Achtung', 'Kein User registriert.\n'
                                  'User registrieren')
         seU.create_user_set_win(main_window)
-    daF.set_data('temp/.prog_states.txt', 'prog_state', 1)
+    daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'prog_state', 1)
 
 
 def check_prog_state():
-    progstate = daF.get_int_data('temp/.prog_states.txt', 'prog_state')
-    filestate = daF.get_int_data('temp/.prog_states.txt', 'file_state')
+    progstate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'prog_state')
+    filestate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
     if progstate == 1:
         if filestate == 0:
             drF.write_titel_drap()
-            daF.set_data('temp/.prog_states.txt', 'file_state', 1)
+            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', 1)
             drF.write_daily_tf(textfeldday)
         else:
             drF.write_daily_tf(textfeldday)
@@ -173,16 +171,16 @@ if __name__ == "__main__":
 
     # variables
     timebutton_text = tk.StringVar()
-    u_name = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_name'))
-    u_prename = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_prename'))
-    u_number = tk.StringVar(value=daF.get_str_data('temp/user_hpf.txt', 'u_number'))
-    comm_list = daF.read_lists('temp/.list_commisions.txt')
+    u_name = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_name'))
+    u_prename = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_prename'))
+    u_number = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_number'))
+    comm_list = daF.read_lists('/home/peti/Projects/OpenWtTaker/temp/.list_commisions.txt')
     comm_list_var = tk.StringVar(value=comm_list)
     bg_col_stat = tk.StringVar(value='Light')
     act_date = tk.StringVar(value=daF.get_act_date())
     # Pictures
-    logo = tk.PhotoImage(file='picture/logo_001.1.png')
-    notepic = tk.PhotoImage(file='picture/note_bg.png')
+    logo = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/logo_001.1.png')
+    notepic = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/note_bg.png')
 
     # Styles
     style_L_small = ttk.Style()

@@ -1,1 +1,1 @@
-{'starthour': 8, 'startmin': 42, 'stophour': 8, 'stopmin': 34, 'workhour': 0, 'workmin': 0}
+{'starthour': 17, 'startmin': 47, 'stophour': 9, 'stopmin': 16, 'workhour': 16, 'workmin': 29}
