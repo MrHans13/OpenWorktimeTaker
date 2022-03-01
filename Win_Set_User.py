@@ -2,6 +2,9 @@ import tkinter as tk
 import tkinter.messagebox as mbox
 import Func_Data as daF
 
+userpath = daF.get_str_path('userpath')
+statepath = daF.get_str_path('statepath')
+
 
 def create_user_set_win(win):
     # zweites Fenster config
@@ -12,7 +15,7 @@ def create_user_set_win(win):
     # Labels erstellen
     label_list = ['Name    ', 'Vorname ', 'Mitarbeiter Nr.']
     for i in range(len(label_list)):
-        tk.Label(user_set_win, text=label_list[i]).grid(row=i + 1, column=0)
+        tk.Label(user_set_win, text=label_list[i]).grid(row=i + 1, column=0, sticky='W')
     tk.Label(user_set_win, text='Bitte füllen Sie alle Felder aus '
                                 'und bestätigen anschliessend.').grid(row=0, column=0, columnspan=3, pady=10)
     # Entry erstellen
@@ -25,18 +28,18 @@ def create_user_set_win(win):
     user_name.grid(row=3, column=1)
 
     # Daten in Files schreiben
-    var_number.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_number', var_number.get()))
-    var_u_name.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_name', var_u_name.get()))
-    var_u_prename.trace("w", lambda *args: daF.set_data('temp/user_hpf.txt', 'u_prename', var_u_prename.get()))
+    var_number.trace("w", lambda *args: daF.set_data(userpath, 'u_number', var_number.get()))
+    var_u_name.trace("w", lambda *args: daF.set_data(userpath, 'u_name', var_u_name.get()))
+    var_u_prename.trace("w", lambda *args: daF.set_data(userpath, 'u_prename', var_u_prename.get()))
 
     # Registrierbutton
     tk.Button(user_set_win, text='Registrieren',
-              command=lambda: register_user(user_set_win, win)).grid(row=4, column=1, columnspan=2)
+              command=lambda: register_user(user_set_win, win)).grid(row=4, column=1)
 
 
 def register_user(win1, win2):
     mbox.showinfo('Achtung', 'Programm muss neu gestartet werden.\n'
                              'Programm beenden?')
-    daF.set_data('temp/.prog_states.txt', 'user_state', 1)
+    daF.set_data(statepath, 'user_state', 1)
     win1.destroy()
     win2.destroy()
