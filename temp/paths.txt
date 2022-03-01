@@ -1,0 +1,8 @@
+{'statepath': '/home/huuspi/Projects/OpenWorktimeTaker/temp/.prog_states.txt',
+'commpath': '/home/huuspi/Projects/OpenWorktimeTaker/Commisions/',
+'userpath': '/home/huuspi/Projects/OpenWorktimeTaker/temp/user_hpf.txt',
+'commlist': '/home/huuspi/Projects/OpenWorktimeTaker/temp/.list_comm.txt',
+'pictpath': '/home/huuspi/Projects/OpenWorktimeTaker/picture/',
+'drap': '/home/huuspi/Projects/OpenWorktimeTaker/temp/Rap_D.txt',
+'wrap': '/home/huuspi/Projects/OpenWorktimeTraker/temp/Rap_W.txt',
+'statelist': '/home/huuspi/Projects/OpenWorktimeTaker/temp/list_states.txt'}

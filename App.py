@@ -26,34 +26,38 @@ def tick():
 
 
 def pushtimebutton():
-    comm_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state')
-    work_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
-    file_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
-    act_comm = daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr')
+    comm_state = daF.get_int_data(statepath, 'comm_state')
+    work_state = daF.get_int_data(statepath, 'work_state')
+    file_state = daF.get_int_data(statepath, 'file_state')
+    act_comm = daF.get_str_data(statepath, 'c_nr')
     if comm_state == 0:
         mbox.showinfo('Achtung', 'bitte erst\nKommission auswählen...')
     else:
         if work_state == 0:
-            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state', 1)
-            caF.set_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', work_state)
+            caF.set_time(commpath + act_comm + '.txt', work_state)
             timebutton_text.set('Stop')
             style_On_Off.configure("onOff.TButton", background='red')
             if file_state >= 1:
-                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', file_state + 1)
+                daF.set_data(statepath, 'file_state', file_state + 1)
+            daF.set_data(statepath, 'work_state', 1)
+            drF.write_daily_tf(textfeldday)
         else:
-            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state', 0)
+            daF.set_data(statepath, 'work_state', 0)
             timebutton_text.set('Start')
             style_On_Off.configure("onOff.TButton", background='green')
             reply = mbox.askyesno('Achtung', 'Wollen Sie die kommission beenden?')
-            caF.set_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', work_state)
-            caF.calc_work_time('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt')
+            caF.calc_work_time(commpath + act_comm + '.txt')
+            drF.write_daily_tf(textfeldday)
             if reply:
-                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state', 0)
+                daF.set_data(statepath, 'comm_state', 0)
+                caF.set_time(commpath + act_comm + '.txt', work_state)
+                drF.write_daily_tf(textfeldday)
             else:
+                caF.set_time(commpath + act_comm + '.txt', work_state)
+
                 if file_state >= 2:
-                    daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', file_state + 1)
-                    caF.add_worktime('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', 'c_workmin', caF.calc_work_min('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt'))
-                    caF.add_worktime('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt', 'c_workhour', caF.calc_work_hour('/home/peti/Projects/OpenWtTaker/Commisions/' + act_comm + '.txt'))
+                    daF.set_data(statepath, 'file_state', file_state + 1)
+                    drF.write_daily_tf(textfeldday)
 
 
 def change_background():
@@ -64,7 +68,7 @@ def change_background():
         style_titel.configure("tS.TLabel", background=l_grey, foreground=d_grey)
         style_L_small.configure("SL.TLabel", background=l_grey, foreground=d_grey)
         style_B_small.configure("bstyle.TButton", background=l_grey, foreground=d_grey)
-        style_raster_hor.configure("rSh.TLabel", background=l_grey, width=2)
+        style_raster_hor.configure("rSh.TLabel", background=l_grey)
         style_raster_ver.configure("rSv.TLabel", background=l_grey, width=2)
         meF.menutaskbar(main_window, l_grey, d_grey, open_file)
         bg_col_stat.set('Dark')
@@ -85,20 +89,20 @@ def change_background():
 def select_com(msg, selectedcomm):
     reply = mbox.askyesno('Bestätigen', msg)
     if reply:
-        daF.set_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr', selectedcomm)
-        workstate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
-        filestate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
+        daF.set_data(statepath, 'c_nr', selectedcomm)
+        workstate = daF.get_int_data(statepath, 'work_state')
+        filestate = daF.get_int_data(statepath, 'file_state')
         if workstate == 1:
             mbox.showinfo('Achtung', 'Sie müssen erst Zeit stoppen.')
         else:
-            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'comm_state', 1)
+            daF.set_data(statepath, 'comm_state', 1)
             if filestate == 1:
                 drF.a_data_drap(str(daF.set_act_date()))
                 drF.a_data_drap('\t\t' + selectedcomm)
                 drF.write_daily_tf(textfeldday)
             if filestate > 1:
-                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/act_comm.txt', 'c_nr', selectedcomm)
-                daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', 2)
+                daF.set_data(statepath, 'c_nr', selectedcomm)
+                daF.set_data(statepath, 'file_state', 2)
                 drF.a_data_drap('\n' + str(daF.set_act_date()))
                 drF.a_data_drap('\t\t' + selectedcomm)
                 drF.write_daily_tf(textfeldday)
@@ -113,9 +117,9 @@ def items_selected(event):
 
 def open_file():
     tf = filedialog.askopenfilename(
-        initialdir="/home/peti/Projects/OpenWtTaker/Commisions/",
-        title="Open Text file",
-        filetypes=(("Text Files", "*.*"),),
+        initialdir=commlist,
+        title='Open Text file',
+        filetypes=(('Text Files', '*.*'),),
     )
     tf = open(tf, 'r')
     data = tf.read()
@@ -124,7 +128,7 @@ def open_file():
 
 
 def check_timebutton_state():
-    work_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'work_state')
+    work_state = daF.get_int_data(statepath, 'work_state')
     if work_state == 0:
         timebutton_text.set('Start')
         style_On_Off.configure("onOff.TButton", font=('Calibri', 12), background='green', foreground='black')
@@ -134,21 +138,21 @@ def check_timebutton_state():
 
 
 def check_user_state():
-    user_state = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'user_state')
+    user_state = daF.get_int_data(statepath, 'user_state')
     if user_state == 0:
         mbox.showinfo('Achtung', 'Kein User registriert.\n'
                                  'User registrieren')
         seU.create_user_set_win(main_window)
-    daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'prog_state', 1)
+    daF.set_data(statepath, 'prog_state', 1)
 
 
 def check_prog_state():
-    progstate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'prog_state')
-    filestate = daF.get_int_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state')
+    progstate = daF.get_int_data(statepath, 'prog_state')
+    filestate = daF.get_int_data(statepath, 'file_state')
     if progstate == 1:
         if filestate == 0:
             drF.write_titel_drap()
-            daF.set_data('/home/peti/Projects/OpenWtTaker/temp/.prog_states.txt', 'file_state', 1)
+            daF.set_data(statepath, 'file_state', 1)
             drF.write_daily_tf(textfeldday)
         else:
             drF.write_daily_tf(textfeldday)
@@ -158,6 +162,11 @@ def check_prog_state():
 # Main Window start
 ################################################################################
 if __name__ == "__main__":
+    statepath = daF.get_str_path('statepath')
+    commpath = daF.get_str_path('commpath')
+    userpath = daF.get_str_path('userpath')
+    commlist = daF.get_str_path('commlist')
+    pictpath = daF.get_str_path('pictpath')
 
     main_window = tk.Tk()
     main_window.title("Open Worktime Tracker")
@@ -171,20 +180,20 @@ if __name__ == "__main__":
 
     # variables
     timebutton_text = tk.StringVar()
-    u_name = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_name'))
-    u_prename = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_prename'))
-    u_number = tk.StringVar(value=daF.get_str_data('/home/peti/Projects/OpenWtTaker/temp/user_hpf.txt', 'u_number'))
-    comm_list = daF.read_lists('/home/peti/Projects/OpenWtTaker/temp/.list_commisions.txt')
+    u_name = tk.StringVar(value=daF.get_str_data(userpath, 'u_name'))
+    u_prename = tk.StringVar(value=daF.get_str_data(userpath, 'u_prename'))
+    u_number = tk.StringVar(value=daF.get_str_data(userpath, 'u_number'))
+    comm_list = daF.read_lists(commlist)
     comm_list_var = tk.StringVar(value=comm_list)
     bg_col_stat = tk.StringVar(value='Light')
     act_date = tk.StringVar(value=daF.get_act_date())
     # Pictures
-    logo = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/logo_001.1.png')
-    notepic = tk.PhotoImage(file='/home/peti/Projects/OpenWtTaker/picture/note_bg.png')
+    logo = tk.PhotoImage(file=pictpath + 'logo_001.1.png')
+    notepic = tk.PhotoImage(file=pictpath + 'note_bg.png')
 
     # Styles
     style_L_small = ttk.Style()
-    style_L_small.configure("SL.TLabel", font=('Calibri', 14), background=d_grey, foreground=l_grey)
+    style_L_small.configure("SL.TLabel", font=('Calibri', 12), background=d_grey, foreground=l_grey)
     style_titel = ttk.Style()
     style_titel.configure("tS.TLabel", font=('Calibri', 20), background=d_grey, foreground=l_grey)
     style_B_small = ttk.Style()
@@ -226,7 +235,6 @@ if __name__ == "__main__":
     labelUhr.grid(row=2, column=3, sticky='nw')
     acttime = ''
     ttk.Label(fdRap, textvariable=act_date, style="SL.TLabel").grid(row=1, column=3, sticky='sw')
-
     # Mitarbeiter Label erstellen
     label_list = ["Mitarbeiter Nr.", "Name", "Vorname", "", "Kommission"]
     for index in range(len(label_list)):
