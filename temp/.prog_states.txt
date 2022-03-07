@@ -1,1 +1,1 @@
-{'prog_state': 1, 'user_state': 1, 'file_state': 3, 'comm_state': 0, 'work_state': 0, 'c_nr': '220001'}
+{'prog_state': 1, 'user_state': 1, 'file_state': 5, 'comm_state': 1, 'work_state': 1, 'c_nr': '220001'}
